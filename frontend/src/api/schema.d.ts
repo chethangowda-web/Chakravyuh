@@ -542,6 +542,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/shield/{target_id}/chat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Shield Chat
+         * @description Send a message to the protected target through Shield. Point your app's users (or a campaign) here.
+         */
+        post: operations["shieldChat"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/shield/{target_id}/protect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Protect
+         * @description Create (or return) the '<name> + Shield' target, which can be attacked like any other target.
+         */
+        post: operations["protectTarget"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/shield/{target_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Overview
+         * @description Shield stats, recent decisions, and the without-vs-with-Shield campaign comparison.
+         */
+        get: operations["getShieldOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/shield/{target_id}/false-block-check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * False Block Check
+         * @description Run the target's legitimate questions through Shield's input check: are real users let through?
+         */
+        post: operations["runFalseBlockCheck"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -950,6 +1030,39 @@ export interface components {
         /** ErrorResponse */
         ErrorResponse: {
             error: components["schemas"]["ErrorBody"];
+        };
+        /** FalseBlockItem */
+        FalseBlockItem: {
+            language: components["schemas"]["LanguageCode"];
+            /**
+             * Question
+             * @description The English question
+             */
+            question: string;
+            /**
+             * Text
+             * @description What was sent through Shield (translated)
+             */
+            text: string;
+            /** Reason */
+            reason: string | null;
+        };
+        /** FalseBlockRequest */
+        FalseBlockRequest: {
+            /** Languages */
+            languages?: components["schemas"]["LanguageCode"][];
+        };
+        /**
+         * FalseBlockResult
+         * @description Legitimate questions sent through Shield's input check: how many got through?
+         */
+        FalseBlockResult: {
+            /** Total */
+            total: number;
+            /** Allowed */
+            allowed: number;
+            /** Blocked */
+            blocked: components["schemas"]["FalseBlockItem"][];
         };
         /**
          * FixApplyMode
@@ -1565,6 +1678,141 @@ export interface components {
             /** Rank */
             rank: number;
         };
+        /** ShieldChatRequest */
+        ShieldChatRequest: {
+            /** Message */
+            message: string;
+        };
+        /**
+         * ShieldChatResponse
+         * @description `reply` is what the user sees: the bot's answer, a redacted answer, or a polite refusal.
+         */
+        ShieldChatResponse: {
+            /** Reply */
+            reply: string;
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "allowed" | "blocked_input" | "redacted_output" | "blocked_output";
+            /** Reason */
+            reason: string | null;
+            /**
+             * Language
+             * @description Detected by Sarvam language ID, e.g. kn-IN
+             */
+            language: string | null;
+            /** Script */
+            script: string | null;
+            /**
+             * English
+             * @description Sarvam Translate's English reading of the message
+             */
+            english: string | null;
+            /**
+             * Rule
+             * @description Fast input rule that fired, if any
+             */
+            rule: string | null;
+            /**
+             * Category
+             * @description Attack category from the Sarvam-105B classifier, if any
+             */
+            category: string | null;
+            /** Latency Ms */
+            latency_ms: number;
+        };
+        /**
+         * ShieldComparison
+         * @description Latest campaign against the bare target vs the latest one against the shielded target.
+         */
+        ShieldComparison: {
+            /** Without Campaign Id */
+            without_campaign_id: number | null;
+            /** With Campaign Id */
+            with_campaign_id: number | null;
+            /**
+             * Same Config
+             * @description Both campaigns used the same mode, categories, languages and styles
+             */
+            same_config: boolean;
+            /** Without Rate */
+            without_rate: number | null;
+            /** With Rate */
+            with_rate: number | null;
+            /** Without By Language */
+            without_by_language: components["schemas"]["LanguageStat"][];
+            /** With By Language */
+            with_by_language: components["schemas"]["LanguageStat"][];
+        };
+        /** ShieldEventOut */
+        ShieldEventOut: {
+            /** Id */
+            id: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Language */
+            language: string | null;
+            /** Script */
+            script: string | null;
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "allowed" | "blocked_input" | "redacted_output" | "blocked_output";
+            /** Reason */
+            reason: string | null;
+            /** Rule */
+            rule: string | null;
+            /** Category */
+            category: string | null;
+            /** Message Excerpt */
+            message_excerpt: string;
+            /** English Excerpt */
+            english_excerpt: string | null;
+            /** Latency Ms */
+            latency_ms: number;
+        };
+        /** ShieldLanguageStat */
+        ShieldLanguageStat: {
+            /** Language */
+            language: string;
+            /** Checked */
+            checked: number;
+            /**
+             * Blocked
+             * @description Inputs blocked + replies blocked or redacted
+             */
+            blocked: number;
+        };
+        /** ShieldOverview */
+        ShieldOverview: {
+            target: components["schemas"]["TargetOut"];
+            /** @description The '<name> + Shield' target, once created */
+            shield_target: components["schemas"]["TargetOut"] | null;
+            stats: components["schemas"]["ShieldStats"];
+            /** Recent */
+            recent: components["schemas"]["ShieldEventOut"][];
+            comparison: components["schemas"]["ShieldComparison"];
+        };
+        /** ShieldStats */
+        ShieldStats: {
+            /** Checked */
+            checked: number;
+            /** Allowed */
+            allowed: number;
+            /** Blocked Input */
+            blocked_input: number;
+            /** Redacted Output */
+            redacted_output: number;
+            /** Blocked Output */
+            blocked_output: number;
+            /** By Language */
+            by_language: components["schemas"]["ShieldLanguageStat"][];
+        };
         /** SynthesizeRequest */
         SynthesizeRequest: {
             /** Text */
@@ -1658,6 +1906,11 @@ export interface components {
             fix_webhook_url: string | null;
             /** Legit Questions */
             legit_questions: string[];
+            /**
+             * Shield For Target Id
+             * @description Set when this target is a Chakravyuh Shield in front of another target
+             */
+            shield_for_target_id: number | null;
             verification_status: components["schemas"]["VerificationStatus"];
             /** Verification Token */
             verification_token: string;
@@ -3352,6 +3605,174 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DashboardSummary"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    shieldChat: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShieldChatRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShieldChatResponse"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    protectTarget: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TargetOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    getShieldOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShieldOverview"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    runFalseBlockCheck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FalseBlockRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FalseBlockResult"];
                 };
             };
             /** @description Client error */

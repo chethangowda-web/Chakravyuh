@@ -7,6 +7,7 @@ from app.models.fix import FixProposal
 from app.models.helpfulness import HelpfulnessRun
 from app.models.regression import RegressionRun
 from app.models.result import Result
+from app.models.shield import ShieldEvent
 from app.models.target import Target
 from app.models.test_case import TestCase
 
@@ -18,6 +19,7 @@ __all__ = [
     "RegressionRun",
     "Result",
     "SarvamCache",
+    "ShieldEvent",
     "Target",
     "TestCase",
 ]

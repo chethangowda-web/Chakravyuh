@@ -1975,6 +1975,238 @@
           }
         }
       }
+    },
+    "/api/v1/shield/{target_id}/chat": {
+      "post": {
+        "tags": [
+          "shield"
+        ],
+        "summary": "Shield Chat",
+        "description": "Send a message to the protected target through Shield. Point your app's users (or a campaign) here.",
+        "operationId": "shieldChat",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShieldChatRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShieldChatResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shield/{target_id}/protect": {
+      "post": {
+        "tags": [
+          "shield"
+        ],
+        "summary": "Protect",
+        "description": "Create (or return) the '<name> + Shield' target, which can be attacked like any other target.",
+        "operationId": "protectTarget",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TargetOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shield/{target_id}": {
+      "get": {
+        "tags": [
+          "shield"
+        ],
+        "summary": "Get Overview",
+        "description": "Shield stats, recent decisions, and the without-vs-with-Shield campaign comparison.",
+        "operationId": "getShieldOverview",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShieldOverview"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shield/{target_id}/false-block-check": {
+      "post": {
+        "tags": [
+          "shield"
+        ],
+        "summary": "False Block Check",
+        "description": "Run the target's legitimate questions through Shield's input check: are real users let through?",
+        "operationId": "runFalseBlockCheck",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FalseBlockRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FalseBlockResult"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3100,6 +3332,87 @@
           "error"
         ],
         "title": "ErrorResponse"
+      },
+      "FalseBlockItem": {
+        "properties": {
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "question": {
+            "type": "string",
+            "title": "Question",
+            "description": "The English question"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "description": "What was sent through Shield (translated)"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "language",
+          "question",
+          "text",
+          "reason"
+        ],
+        "title": "FalseBlockItem"
+      },
+      "FalseBlockRequest": {
+        "properties": {
+          "languages": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageCode"
+            },
+            "type": "array",
+            "maxItems": 5,
+            "minItems": 1,
+            "title": "Languages"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "FalseBlockRequest"
+      },
+      "FalseBlockResult": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "allowed": {
+            "type": "integer",
+            "title": "Allowed"
+          },
+          "blocked": {
+            "items": {
+              "$ref": "#/components/schemas/FalseBlockItem"
+            },
+            "type": "array",
+            "title": "Blocked"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "total",
+          "allowed",
+          "blocked"
+        ],
+        "title": "FalseBlockResult",
+        "description": "Legitimate questions sent through Shield's input check: how many got through?"
       },
       "FixApplyMode": {
         "type": "string",
@@ -4969,6 +5282,430 @@
         ],
         "title": "SeverityOption"
       },
+      "ShieldChatRequest": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "maxLength": 8000,
+            "minLength": 1,
+            "title": "Message"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "ShieldChatRequest"
+      },
+      "ShieldChatResponse": {
+        "properties": {
+          "reply": {
+            "type": "string",
+            "title": "Reply"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "allowed",
+              "blocked_input",
+              "redacted_output",
+              "blocked_output"
+            ],
+            "title": "Action"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language",
+            "description": "Detected by Sarvam language ID, e.g. kn-IN"
+          },
+          "script": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Script"
+          },
+          "english": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "English",
+            "description": "Sarvam Translate's English reading of the message"
+          },
+          "rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rule",
+            "description": "Fast input rule that fired, if any"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category",
+            "description": "Attack category from the Sarvam-105B classifier, if any"
+          },
+          "latency_ms": {
+            "type": "integer",
+            "title": "Latency Ms"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "reply",
+          "action",
+          "reason",
+          "language",
+          "script",
+          "english",
+          "rule",
+          "category",
+          "latency_ms"
+        ],
+        "title": "ShieldChatResponse",
+        "description": "`reply` is what the user sees: the bot's answer, a redacted answer, or a polite refusal."
+      },
+      "ShieldComparison": {
+        "properties": {
+          "without_campaign_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Without Campaign Id"
+          },
+          "with_campaign_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "With Campaign Id"
+          },
+          "same_config": {
+            "type": "boolean",
+            "title": "Same Config",
+            "description": "Both campaigns used the same mode, categories, languages and styles"
+          },
+          "without_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Without Rate"
+          },
+          "with_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "With Rate"
+          },
+          "without_by_language": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageStat"
+            },
+            "type": "array",
+            "title": "Without By Language"
+          },
+          "with_by_language": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageStat"
+            },
+            "type": "array",
+            "title": "With By Language"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "without_campaign_id",
+          "with_campaign_id",
+          "same_config",
+          "without_rate",
+          "with_rate",
+          "without_by_language",
+          "with_by_language"
+        ],
+        "title": "ShieldComparison",
+        "description": "Latest campaign against the bare target vs the latest one against the shielded target."
+      },
+      "ShieldEventOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "script": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Script"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "allowed",
+              "blocked_input",
+              "redacted_output",
+              "blocked_output"
+            ],
+            "title": "Action"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rule"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "message_excerpt": {
+            "type": "string",
+            "title": "Message Excerpt"
+          },
+          "english_excerpt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "English Excerpt"
+          },
+          "latency_ms": {
+            "type": "integer",
+            "title": "Latency Ms"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "created_at",
+          "language",
+          "script",
+          "action",
+          "reason",
+          "rule",
+          "category",
+          "message_excerpt",
+          "english_excerpt",
+          "latency_ms"
+        ],
+        "title": "ShieldEventOut"
+      },
+      "ShieldLanguageStat": {
+        "properties": {
+          "language": {
+            "type": "string",
+            "title": "Language"
+          },
+          "checked": {
+            "type": "integer",
+            "title": "Checked"
+          },
+          "blocked": {
+            "type": "integer",
+            "title": "Blocked",
+            "description": "Inputs blocked + replies blocked or redacted"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "language",
+          "checked",
+          "blocked"
+        ],
+        "title": "ShieldLanguageStat"
+      },
+      "ShieldOverview": {
+        "properties": {
+          "target": {
+            "$ref": "#/components/schemas/TargetOut"
+          },
+          "shield_target": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TargetOut"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The '<name> + Shield' target, once created"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/ShieldStats"
+          },
+          "recent": {
+            "items": {
+              "$ref": "#/components/schemas/ShieldEventOut"
+            },
+            "type": "array",
+            "title": "Recent"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/ShieldComparison"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "target",
+          "shield_target",
+          "stats",
+          "recent",
+          "comparison"
+        ],
+        "title": "ShieldOverview"
+      },
+      "ShieldStats": {
+        "properties": {
+          "checked": {
+            "type": "integer",
+            "title": "Checked"
+          },
+          "allowed": {
+            "type": "integer",
+            "title": "Allowed"
+          },
+          "blocked_input": {
+            "type": "integer",
+            "title": "Blocked Input"
+          },
+          "redacted_output": {
+            "type": "integer",
+            "title": "Redacted Output"
+          },
+          "blocked_output": {
+            "type": "integer",
+            "title": "Blocked Output"
+          },
+          "by_language": {
+            "items": {
+              "$ref": "#/components/schemas/ShieldLanguageStat"
+            },
+            "type": "array",
+            "title": "By Language"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "checked",
+          "allowed",
+          "blocked_input",
+          "redacted_output",
+          "blocked_output",
+          "by_language"
+        ],
+        "title": "ShieldStats"
+      },
       "SynthesizeRequest": {
         "properties": {
           "text": {
@@ -5205,6 +5942,18 @@
             "type": "array",
             "title": "Legit Questions"
           },
+          "shield_for_target_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shield For Target Id",
+            "description": "Set when this target is a Chakravyuh Shield in front of another target"
+          },
           "verification_status": {
             "$ref": "#/components/schemas/VerificationStatus"
           },
@@ -5233,6 +5982,7 @@
           "system_prompt_hint",
           "fix_webhook_url",
           "legit_questions",
+          "shield_for_target_id",
           "verification_status",
           "verification_token",
           "created_at"

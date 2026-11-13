@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlmodel import Field, SQLModel
 
-from app.models._common import json_column, utcnow
+from app.models._common import json_column, nullable_json_column, utcnow
 from app.schemas.enums import HttpMethod, TargetKind, VerificationStatus
 
 
@@ -18,7 +18,8 @@ class Target(SQLModel, table=True):
     canary_strings: list[str] = Field(default_factory=list, sa_column=json_column())
     system_prompt_hint: str | None = None
     fix_webhook_url: str | None = None  # where Chakravyuh may push a patched system prompt
-    legit_questions: list[str] | None = Field(default=None, sa_column=json_column())  # over-refusal check; None = default set
+    legit_questions: list[str] | None = Field(default=None, sa_column=nullable_json_column())  # over-refusal check; None = default set
+    shield_for_target_id: int | None = None  # set on a "<name> + Shield" target: the target Shield protects
     verification_status: VerificationStatus = VerificationStatus.UNVERIFIED
     verification_token: str
     ownership_confirmed_at: datetime

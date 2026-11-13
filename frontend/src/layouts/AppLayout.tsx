@@ -21,6 +21,7 @@ const NAV_SECTIONS: ReadonlyArray<{ title: string; items: readonly NavItem[] }> 
       { to: '/studio', label: 'Attack Studio', icon: FlaskConical },
       { to: '/campaigns', label: 'Campaigns', icon: Radar },
       { to: '/voice', label: 'Voice Lab', icon: Mic },
+      { to: '/shield', label: 'Shield', icon: ShieldCheck },
     ],
   },
 ]

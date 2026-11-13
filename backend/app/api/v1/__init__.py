@@ -11,6 +11,7 @@ from app.api.v1 import (
     meta,
     regression,
     results,
+    shield,
     targets,
     voice,
 )
@@ -22,5 +23,5 @@ ERROR_RESPONSES: dict[int | str, dict[str, object]] = {
 }
 
 api_router = APIRouter(prefix="/api/v1", responses=ERROR_RESPONSES)
-for module in (health, meta, targets, attacks, campaigns, fixes, results, voice, regression, dashboard):
+for module in (health, meta, targets, attacks, campaigns, fixes, results, voice, regression, dashboard, shield):
     api_router.include_router(module.router)

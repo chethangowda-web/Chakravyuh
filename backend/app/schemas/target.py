@@ -90,6 +90,9 @@ class TargetOut(StrictModel):
     system_prompt_hint: str | None
     fix_webhook_url: str | None
     legit_questions: list[str]
+    shield_for_target_id: int | None = Field(
+        description="Set when this target is a Chakravyuh Shield in front of another target"
+    )
     verification_status: VerificationStatus
     verification_token: str
     created_at: datetime

@@ -37,6 +37,8 @@ class Settings(BaseSettings):
     target_timeout_s: float = 20.0
     target_max_response_bytes: int = 256 * 1024
     max_cases_per_campaign: int = 300
+    # Where this API is reachable by itself: shielded targets point at {public_api_base_url}/api/v1/shield/...
+    public_api_base_url: str = "http://127.0.0.1:8010"
 
     # --- Sarvam AI -------------------------------------------------------
     sarvam_api_key: SecretStr | None = None

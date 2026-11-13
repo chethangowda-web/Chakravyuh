@@ -10,6 +10,7 @@ import { NewCampaignPage } from './pages/NewCampaignPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { RegressionPage } from './pages/RegressionPage'
 import { ReportPage } from './pages/ReportPage'
+import { ShieldPage } from './pages/ShieldPage'
 import { RouteErrorPage } from './pages/RouteErrorPage'
 import { TargetFormPage } from './pages/TargetFormPage'
 import { TargetsPage } from './pages/TargetsPage'
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       { path: 'campaigns/:campaignId/report', element: <ReportPage /> },
       { path: 'findings/:resultId', element: <FindingDetailPage /> },
       { path: 'voice', element: <VoiceLabPage /> },
+      { path: 'shield', element: <ShieldPage /> },
       { path: 'regression/:regressionId', element: <RegressionPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],

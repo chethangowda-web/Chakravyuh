@@ -20,6 +20,7 @@ Built for *Build with Sarvam* (Vertex Club × Sarvam AI) · Security & Developer
 | **Text vs voice delta** | *Replay as voice* re-sends a campaign's attacks through Sarvam TTS → STT → the bot, **and** re-sends the text version at the same time, so both are judged identically. In our run: text 7/12, voice 8/12, 4% transcript drift — a voice bot inherits its text bot's weaknesses. |
 | **How findings were confirmed** | Dashboard and report show the split between deterministic proof and the model judge (e.g. **80% proven by rules, 20% by the judge**), answering the "AI grading itself" objection with a number. |
 | **CI gate** | `scripts/ci_gate.py` (needs only `httpx`) runs or reads a campaign and exits non-zero when critical findings or the **Language Security Gap** cross a threshold, with a JSON report. Example GitHub Actions workflow: [docs/ci/chakravyuh-gate.yml](docs/ci/chakravyuh-gate.yml). |
+| **Chakravyuh Shield (runtime guard)** | A proxy in front of any verified bot: **Sarvam language ID** + **Sarvam Translate** read every message in English whatever the language or script, fast rules and a **Sarvam-105B** classifier block attacks before they reach the bot, and the red team's own detectors block or redact secrets, a recited system prompt and Indian PII in replies (also when the bot writes them in Indian script). *Protect with Shield* registers `<bot> + Shield` as a target so the **same campaign** proves the effect. In our run on Sahayak Seva (80 attacks, identical settings): **56% → 5%** attack success (Kannada 69% → 13%, Tamil 63% → 0%), and **30/30** legitimate questions in English, Hindi and Kannada still got through. Adds about 3–6 s per message (Sarvam calls). |
 | **Attack library** | 25 hand-written seeds across prompt injection, jailbreak, instruction override, system-prompt extraction, data leakage and harmful content → localized by **Sarvam Translate** into native / romanized / code-mixed forms, each verified by **Sarvam language ID**. |
 | **Voice red team** | Attack audio from **Sarvam TTS** (or upload / mic) → **Sarvam STT** → your LLM. Reports transcript drift. |
 | **Detection** | Deterministic first: planted-secret canaries, injected-code markers, Indian PII regexes (PAN, Aadhaar, mobile, accounts), system-prompt overlap, multilingual refusals. **Sarvam-105B** judges only what those can't decide, and must quote evidence that's really in the reply. |
@@ -101,7 +102,7 @@ Stop the backend before `restore`. Browsing restored data needs no network.
 Before every merge:
 
 ```powershell
-cd backend;  .venv\Scripts\python -m pytest          # 73 tests, no network, no credits
+cd backend;  .venv\Scripts\python -m pytest          # 86 tests, no network, no credits
 cd frontend; npm run verify                           # contract check + typecheck + lint
 ```
 

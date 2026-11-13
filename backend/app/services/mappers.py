@@ -39,7 +39,7 @@ def target_out(t: Target) -> TargetOut:
         headers=[MaskedHeader(name=k, value_masked=mask(v)) for k, v in t.headers.items()],
         body_template=t.body_template, response_path=t.response_path,
         canary_strings=list(t.canary_strings), system_prompt_hint=t.system_prompt_hint,
-        fix_webhook_url=t.fix_webhook_url, legit_questions=list(t.legit_questions or []),
+        fix_webhook_url=t.fix_webhook_url, legit_questions=list(t.legit_questions or []), shield_for_target_id=t.shield_for_target_id,
         verification_status=t.verification_status, verification_token=t.verification_token,
         created_at=utc(t.created_at),
     )

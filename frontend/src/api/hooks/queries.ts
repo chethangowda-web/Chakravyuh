@@ -82,6 +82,15 @@ export function useCampaignLive(campaignId: number, active: boolean, statusTag: 
   return useApiQuery(`live:${campaignId}:${statusTag}`, fetcher, { intervalMs: active ? ACTIVE_POLL_MS : undefined })
 }
 
+/** Shield overview for a protected target; refreshes every 5 s so new decisions and campaign results appear. */
+export function useShieldOverview(targetId: number | null, refreshTag: number) {
+  const fetcher = useCallback(
+    (signal: AbortSignal) => (targetId === null ? Promise.resolve(null) : endpoints.getShieldOverview(targetId, signal)),
+    [targetId],
+  )
+  return useApiQuery(`shield:${targetId ?? 'none'}:${refreshTag}`, fetcher, { intervalMs: targetId === null ? undefined : 5000 })
+}
+
 /** Adaptive missions refresh while the campaign is running. */
 export function useCampaignMissions(campaignId: number, active: boolean, statusTag: string) {
   const fetcher = useCallback((signal: AbortSignal) => endpoints.listCampaignMissions(campaignId, signal), [campaignId])

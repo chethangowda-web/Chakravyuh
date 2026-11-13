@@ -41,6 +41,16 @@ export const endpoints = {
   listCampaigns: (signal: AbortSignal) => unwrap(api.GET('/api/v1/campaigns', { signal })),
   getCampaign: (campaignId: number, signal: AbortSignal) =>
     unwrap(api.GET('/api/v1/campaigns/{campaign_id}', { params: { path: { campaign_id: campaignId } }, signal })),
+  getShieldOverview: (targetId: number, signal: AbortSignal) =>
+    unwrap(api.GET('/api/v1/shield/{target_id}', { params: { path: { target_id: targetId } }, signal })),
+  protectTarget: (targetId: number) =>
+    unwrap(api.POST('/api/v1/shield/{target_id}/protect', { params: { path: { target_id: targetId } } })),
+  shieldChat: (targetId: number, message: string) =>
+    unwrap(api.POST('/api/v1/shield/{target_id}/chat', { params: { path: { target_id: targetId } }, body: { message } })),
+  runFalseBlockCheck: (targetId: number, languages: S['LanguageCode'][]) =>
+    unwrap(
+      api.POST('/api/v1/shield/{target_id}/false-block-check', { params: { path: { target_id: targetId } }, body: { languages } }),
+    ),
   getCampaignLive: (campaignId: number, signal: AbortSignal) =>
     unwrap(api.GET('/api/v1/campaigns/{campaign_id}/live', { params: { path: { campaign_id: campaignId } }, signal })),
   cancelCampaign: (campaignId: number) =>
