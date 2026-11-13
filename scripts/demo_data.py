@@ -3,9 +3,10 @@
   python scripts/demo_data.py save      # snapshot backend/data  -> backend/seed/
   python scripts/demo_data.py restore   # backend/seed/          -> backend/data  (stop the backend first!)
 
-The snapshot contains the demo target, a full multilingual campaign, its regression run,
-spoken (voice) findings and the Sarvam response cache (translations/TTS), so even attack
-preview and TTS replays work offline. It contains no secrets: the Sarvam key lives only in .env.
+The snapshot contains the demo targets, campaigns, regression runs, spoken (voice) findings with their audio
+files, and the small Sarvam response caches (translate, language ID, chat) so Attack Studio previews work
+offline. The text-to-speech cache is left out: it is base64 audio (tens of MB for a few dozen entries) and the
+saved voice findings play from the audio files instead. It contains no secrets: the Sarvam key lives only in .env.
 """
 
 import shutil
@@ -27,6 +28,11 @@ def save() -> None:
     conn.close()
     SEED.mkdir(exist_ok=True)
     shutil.copy2(db, SEED / "app.db")
+    trim = sqlite3.connect(SEED / "app.db")  # the copy only; the live database is untouched
+    trim.execute("DELETE FROM sarvamcache WHERE endpoint = '/text-to-speech'")
+    trim.commit()
+    trim.execute("VACUUM")
+    trim.close()
     audio_dst = SEED / "audio"
     shutil.rmtree(audio_dst, ignore_errors=True)
     if (DATA / "audio").exists():
