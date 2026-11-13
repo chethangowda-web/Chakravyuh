@@ -3,7 +3,6 @@
 .env.*
 !.env.example
 data
-seed
 tests
 __pycache__
 *.pyc

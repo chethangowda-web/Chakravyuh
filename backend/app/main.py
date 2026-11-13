@@ -11,6 +11,7 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app import bootstrap
 from app.api.v1 import api_router
 from app.config import get_settings
 from app.db import init_db
@@ -22,7 +23,9 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    bootstrap.copy_seed_if_empty()  # hosted demo only (SEED_DEMO_DATA); before the DB is opened
     init_db()
+    bootstrap.point_demo_targets()
     runner.recover_interrupted()
     helpfulness.recover_interrupted()
     yield

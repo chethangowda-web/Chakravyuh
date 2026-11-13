@@ -40,6 +40,12 @@ class Settings(BaseSettings):
     # Where this API is reachable by itself: shielded targets point at {public_api_base_url}/api/v1/shield/...
     public_api_base_url: str = "http://127.0.0.1:8010"
 
+    # --- Hosted demo (see app/bootstrap.py); all optional ------------------
+    seed_demo_data: bool = False
+    demo_bharatbank_url: str | None = None
+    demo_sahayak_url: str | None = None
+    demo_target_api_key: SecretStr | None = None
+
     # --- Sarvam AI -------------------------------------------------------
     sarvam_api_key: SecretStr | None = None
     sarvam_base_url: str = "https://api.sarvam.ai"

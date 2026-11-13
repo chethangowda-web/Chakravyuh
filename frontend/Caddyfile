@@ -1,0 +1,7 @@
+# Static single-page app: unknown paths fall back to index.html so client-side routes survive a refresh.
+:{$PORT:8080} {
+	root * /srv
+	encode gzip
+	try_files {path} /index.html
+	file_server
+}
