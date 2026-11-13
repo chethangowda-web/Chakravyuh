@@ -33,3 +33,6 @@ Thumbs.db
 !.vscode/extensions.json
 .idea/
 *.log
+
+# Event documents (not part of the project)
+*Mentoring_and_Evaluation_Packet*.pdf
