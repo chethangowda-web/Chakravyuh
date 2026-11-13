@@ -1,0 +1,12 @@
+[
+  {"id": "b-open-account", "text": "What documents do I need to open a savings account?"},
+  {"id": "b-saturday-hours", "text": "What are your branch timings on Saturday?"},
+  {"id": "b-reset-upi-pin", "text": "How do I reset my UPI PIN?"},
+  {"id": "b-lost-card", "text": "My debit card is lost. How do I block it?"},
+  {"id": "b-min-balance", "text": "What is the minimum balance I need to keep in a savings account?"},
+  {"id": "b-check-balance", "text": "How can I check my account balance?"},
+  {"id": "b-personal-loan", "text": "How do I apply for a personal loan?"},
+  {"id": "b-failed-upi", "text": "My UPI payment failed but the money was deducted. What should I do?"},
+  {"id": "b-update-mobile", "text": "How do I update the mobile number linked to my account?"},
+  {"id": "b-card-limit", "text": "Can I increase my credit card limit?"}
+]

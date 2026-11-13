@@ -1,0 +1,5838 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Chakravyuh API",
+    "description": "Indic red-teaming lab for LLM and voice applications.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Get Health",
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/meta/enums": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Get Meta Enums",
+        "operationId": "getMetaEnums",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaEnumsResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/targets": {
+      "get": {
+        "tags": [
+          "targets"
+        ],
+        "summary": "List Targets",
+        "operationId": "listTargets",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TargetList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "targets"
+        ],
+        "summary": "Create Target",
+        "operationId": "createTarget",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TargetCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TargetOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/targets/{target_id}": {
+      "get": {
+        "tags": [
+          "targets"
+        ],
+        "summary": "Get Target",
+        "operationId": "getTarget",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TargetOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "targets"
+        ],
+        "summary": "Update Target",
+        "operationId": "updateTarget",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TargetUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TargetOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "targets"
+        ],
+        "summary": "Delete Target",
+        "operationId": "deleteTarget",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/targets/{target_id}/verify": {
+      "post": {
+        "tags": [
+          "targets"
+        ],
+        "summary": "Verify Target",
+        "operationId": "verifyTarget",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyTargetResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/targets/{target_id}/test-connection": {
+      "post": {
+        "tags": [
+          "targets"
+        ],
+        "summary": "Test Connection",
+        "operationId": "testTargetConnection",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestConnectionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestConnectionResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/attacks/templates": {
+      "get": {
+        "tags": [
+          "attacks"
+        ],
+        "summary": "List Templates",
+        "operationId": "listAttackTemplates",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/AttackCategory"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/LanguageCode"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Language"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttackTemplateList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/attacks/preview": {
+      "post": {
+        "tags": [
+          "attacks"
+        ],
+        "summary": "Preview Attack",
+        "operationId": "previewAttack",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttackPreviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttackPreviewResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/attacks/generate": {
+      "post": {
+        "tags": [
+          "attacks"
+        ],
+        "summary": "Generate Attack",
+        "operationId": "generateAttackParaphrases",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttackGenerateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttackGenerateResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/campaigns/estimate": {
+      "post": {
+        "tags": [
+          "campaigns"
+        ],
+        "summary": "Estimate Campaign",
+        "operationId": "estimateCampaign",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignEstimateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignEstimateResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/campaigns": {
+      "get": {
+        "tags": [
+          "campaigns"
+        ],
+        "summary": "List Campaigns",
+        "operationId": "listCampaigns",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "campaigns"
+        ],
+        "summary": "Create Campaign",
+        "operationId": "createCampaign",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CampaignCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}": {
+      "get": {
+        "tags": [
+          "campaigns"
+        ],
+        "summary": "Get Campaign",
+        "operationId": "getCampaign",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/cancel": {
+      "post": {
+        "tags": [
+          "campaigns"
+        ],
+        "summary": "Cancel Campaign",
+        "operationId": "cancelCampaign",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/results": {
+      "get": {
+        "tags": [
+          "campaigns"
+        ],
+        "summary": "List Results",
+        "operationId": "listCampaignResults",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Severity"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Severity"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/LanguageCode"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Language"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/AttackCategory"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "name": "verdict",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Verdict"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Verdict"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultPage"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/regression": {
+      "post": {
+        "tags": [
+          "campaigns"
+        ],
+        "summary": "Create Regression",
+        "operationId": "createRegression",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegressionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegressionOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/live": {
+      "get": {
+        "tags": [
+          "campaigns"
+        ],
+        "summary": "Get Live",
+        "description": "Live pipeline view: per-stage counts and the latest attacks (poll while the campaign runs).",
+        "operationId": "getCampaignLive",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignLiveOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/report": {
+      "get": {
+        "tags": [
+          "campaigns"
+        ],
+        "summary": "Get Report",
+        "operationId": "getCampaignReport",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignReport"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/missions": {
+      "get": {
+        "tags": [
+          "hardening"
+        ],
+        "summary": "List Missions",
+        "operationId": "listCampaignMissions",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/fixes": {
+      "get": {
+        "tags": [
+          "hardening"
+        ],
+        "summary": "List Fixes",
+        "operationId": "listCampaignFixes",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FixList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "hardening"
+        ],
+        "summary": "Propose Fix",
+        "operationId": "proposeFix",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FixProposalOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/fixes/{fix_id}": {
+      "get": {
+        "tags": [
+          "hardening"
+        ],
+        "summary": "Get Fix",
+        "operationId": "getFix",
+        "parameters": [
+          {
+            "name": "fix_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Fix Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FixProposalOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/fixes/{fix_id}/apply": {
+      "post": {
+        "tags": [
+          "hardening"
+        ],
+        "summary": "Apply Fix",
+        "operationId": "applyFix",
+        "parameters": [
+          {
+            "name": "fix_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Fix Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FixApplyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FixProposalOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/campaigns/{campaign_id}/hardening": {
+      "get": {
+        "tags": [
+          "hardening"
+        ],
+        "summary": "Get Hardening",
+        "operationId": "getHardeningTimeline",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HardeningOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/results/{result_id}": {
+      "get": {
+        "tags": [
+          "results"
+        ],
+        "summary": "Get Result",
+        "operationId": "getResult",
+        "parameters": [
+          {
+            "name": "result_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Result Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDetail"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voice/synthesize": {
+      "post": {
+        "tags": [
+          "voice"
+        ],
+        "summary": "Synthesize",
+        "operationId": "synthesizeVoice",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SynthesizeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AudioAssetOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voice/upload": {
+      "post": {
+        "tags": [
+          "voice"
+        ],
+        "summary": "Upload",
+        "operationId": "uploadVoice",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_uploadVoice"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AudioAssetOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voice/replay/{campaign_id}": {
+      "post": {
+        "tags": [
+          "voice"
+        ],
+        "summary": "Start Voice Replay",
+        "description": "Replay a campaign's attacks as speech (Sarvam TTS -> STT -> target) for a text-vs-voice comparison.",
+        "operationId": "startVoiceReplay",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoiceReplayRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voice/replay/{campaign_id}/comparison": {
+      "get": {
+        "tags": [
+          "voice"
+        ],
+        "summary": "Get Voice Comparison",
+        "operationId": "getVoiceComparison",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoiceComparisonOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voice/test": {
+      "post": {
+        "tags": [
+          "voice"
+        ],
+        "summary": "Run Voice Test",
+        "operationId": "runVoiceTest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoiceTestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoiceTestResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voice/audio/{audio_id}": {
+      "get": {
+        "tags": [
+          "voice"
+        ],
+        "summary": "Get Audio",
+        "operationId": "getVoiceAudio",
+        "parameters": [
+          {
+            "name": "audio_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Audio Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "audio/wav": {},
+              "audio/webm": {},
+              "audio/mpeg": {}
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/regression/{regression_id}": {
+      "get": {
+        "tags": [
+          "regression"
+        ],
+        "summary": "Get Regression",
+        "operationId": "getRegression",
+        "parameters": [
+          {
+            "name": "regression_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Regression Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegressionOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard/summary": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Get Summary",
+        "operationId": "getDashboardSummary",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardSummary"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AttackCategory": {
+        "type": "string",
+        "enum": [
+          "prompt_injection",
+          "jailbreak",
+          "instruction_override",
+          "system_prompt_extraction",
+          "sensitive_data_leak",
+          "harmful_content"
+        ],
+        "title": "AttackCategory"
+      },
+      "AttackGenerateRequest": {
+        "properties": {
+          "template_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Template Id"
+          },
+          "count": {
+            "type": "integer",
+            "maximum": 5,
+            "minimum": 1,
+            "title": "Count",
+            "default": 3
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "template_id"
+        ],
+        "title": "AttackGenerateRequest"
+      },
+      "AttackGenerateResponse": {
+        "properties": {
+          "template_id": {
+            "type": "string",
+            "title": "Template Id"
+          },
+          "paraphrases": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Paraphrases"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "template_id",
+          "paraphrases"
+        ],
+        "title": "AttackGenerateResponse"
+      },
+      "AttackMode": {
+        "type": "string",
+        "enum": [
+          "static",
+          "adaptive",
+          "voice_replay"
+        ],
+        "title": "AttackMode"
+      },
+      "AttackPreviewRequest": {
+        "properties": {
+          "template_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Template Id"
+          },
+          "languages": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageCode"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Languages"
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/ScriptVariant"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Variants"
+          },
+          "wrappers": {
+            "items": {
+              "$ref": "#/components/schemas/AttackWrapper"
+            },
+            "type": "array",
+            "title": "Wrappers"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "template_id",
+          "languages",
+          "variants"
+        ],
+        "title": "AttackPreviewRequest"
+      },
+      "AttackPreviewResponse": {
+        "properties": {
+          "template": {
+            "$ref": "#/components/schemas/AttackTemplateOut"
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/AttackVariantOut"
+            },
+            "type": "array",
+            "title": "Variants"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "template",
+          "variants",
+          "warnings"
+        ],
+        "title": "AttackPreviewResponse"
+      },
+      "AttackTemplateList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AttackTemplateOut"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "AttackTemplateList"
+      },
+      "AttackTemplateOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "technique": {
+            "type": "string",
+            "title": "Technique"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "marker_required": {
+            "type": "boolean",
+            "title": "Marker Required"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "category",
+          "technique",
+          "language",
+          "text",
+          "marker_required",
+          "notes"
+        ],
+        "title": "AttackTemplateOut"
+      },
+      "AttackVariantOut": {
+        "properties": {
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/ScriptVariant"
+          },
+          "mutation_chain": {
+            "items": {
+              "$ref": "#/components/schemas/Mutation"
+            },
+            "type": "array",
+            "title": "Mutation Chain"
+          },
+          "attack_text": {
+            "type": "string",
+            "title": "Attack Text"
+          },
+          "english_gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "English Gloss"
+          },
+          "detected_language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detected Language"
+          },
+          "detected_script": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detected Script"
+          },
+          "marker_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marker Token"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "language",
+          "variant",
+          "mutation_chain",
+          "attack_text",
+          "english_gloss",
+          "detected_language",
+          "detected_script",
+          "marker_token"
+        ],
+        "title": "AttackVariantOut"
+      },
+      "AttackWrapper": {
+        "type": "string",
+        "enum": [
+          "script_switch",
+          "roleplay_wrap",
+          "translation_wrap"
+        ],
+        "title": "AttackWrapper",
+        "description": "Optional local (no-API) transformations applied after localization."
+      },
+      "AudioAssetOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "source": {
+            "$ref": "#/components/schemas/AudioSource"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LanguageCode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "duration_s": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration S"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "source",
+          "language",
+          "text",
+          "duration_s",
+          "url",
+          "created_at"
+        ],
+        "title": "AudioAssetOut"
+      },
+      "AudioSource": {
+        "type": "string",
+        "enum": [
+          "tts",
+          "upload"
+        ],
+        "title": "AudioSource"
+      },
+      "Body_uploadVoice": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "description": "WAV/WebM/OGG/MP3/M4A, max 25 s and 2 MB"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LanguageCode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_uploadVoice"
+      },
+      "CampaignConfig-Input": {
+        "properties": {
+          "mode": {
+            "$ref": "#/components/schemas/AttackMode",
+            "default": "static"
+          },
+          "max_turns": {
+            "type": "integer",
+            "maximum": 6,
+            "minimum": 1,
+            "title": "Max Turns",
+            "description": "Adaptive mode: attempts per mission before giving up",
+            "default": 4
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/AttackCategory"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Categories"
+          },
+          "languages": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageCode"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Languages"
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/ScriptVariant"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Variants"
+          },
+          "wrappers": {
+            "items": {
+              "$ref": "#/components/schemas/AttackWrapper"
+            },
+            "type": "array",
+            "title": "Wrappers"
+          },
+          "use_judge": {
+            "type": "boolean",
+            "title": "Use Judge",
+            "default": true
+          },
+          "max_cases": {
+            "type": "integer",
+            "maximum": 300,
+            "minimum": 1,
+            "title": "Max Cases",
+            "default": 300
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "categories",
+          "languages",
+          "variants"
+        ],
+        "title": "CampaignConfig"
+      },
+      "CampaignConfig-Output": {
+        "properties": {
+          "mode": {
+            "$ref": "#/components/schemas/AttackMode",
+            "default": "static"
+          },
+          "max_turns": {
+            "type": "integer",
+            "maximum": 6,
+            "minimum": 1,
+            "title": "Max Turns",
+            "description": "Adaptive mode: attempts per mission before giving up",
+            "default": 4
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/AttackCategory"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Categories"
+          },
+          "languages": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageCode"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Languages"
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/ScriptVariant"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Variants"
+          },
+          "wrappers": {
+            "items": {
+              "$ref": "#/components/schemas/AttackWrapper"
+            },
+            "type": "array",
+            "title": "Wrappers"
+          },
+          "use_judge": {
+            "type": "boolean",
+            "title": "Use Judge",
+            "default": true
+          },
+          "max_cases": {
+            "type": "integer",
+            "maximum": 300,
+            "minimum": 1,
+            "title": "Max Cases",
+            "default": 300
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "mode",
+          "max_turns",
+          "categories",
+          "languages",
+          "variants",
+          "wrappers",
+          "use_judge",
+          "max_cases"
+        ],
+        "title": "CampaignConfig"
+      },
+      "CampaignCounts": {
+        "properties": {
+          "vulnerable": {
+            "type": "integer",
+            "title": "Vulnerable",
+            "default": 0
+          },
+          "safe": {
+            "type": "integer",
+            "title": "Safe",
+            "default": 0
+          },
+          "inconclusive": {
+            "type": "integer",
+            "title": "Inconclusive",
+            "default": 0
+          },
+          "errors": {
+            "type": "integer",
+            "title": "Errors",
+            "default": 0
+          },
+          "by_severity": {
+            "$ref": "#/components/schemas/SeverityCounts"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "vulnerable",
+          "safe",
+          "inconclusive",
+          "errors",
+          "by_severity"
+        ],
+        "title": "CampaignCounts"
+      },
+      "CampaignCreate": {
+        "properties": {
+          "target_id": {
+            "type": "integer",
+            "title": "Target Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "config": {
+            "$ref": "#/components/schemas/CampaignConfig-Input"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "target_id",
+          "name",
+          "config"
+        ],
+        "title": "CampaignCreate"
+      },
+      "CampaignEstimateRequest": {
+        "properties": {
+          "target_id": {
+            "type": "integer",
+            "title": "Target Id"
+          },
+          "config": {
+            "$ref": "#/components/schemas/CampaignConfig-Input"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "target_id",
+          "config"
+        ],
+        "title": "CampaignEstimateRequest"
+      },
+      "CampaignEstimateResponse": {
+        "properties": {
+          "total_cases": {
+            "type": "integer",
+            "title": "Total Cases"
+          },
+          "estimated_target_calls": {
+            "type": "integer",
+            "title": "Estimated Target Calls"
+          },
+          "estimated_sarvam_calls": {
+            "type": "integer",
+            "title": "Estimated Sarvam Calls"
+          },
+          "capped": {
+            "type": "boolean",
+            "title": "Capped"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "total_cases",
+          "estimated_target_calls",
+          "estimated_sarvam_calls",
+          "capped",
+          "warnings"
+        ],
+        "title": "CampaignEstimateResponse"
+      },
+      "CampaignList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CampaignOut"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "CampaignList"
+      },
+      "CampaignLiveOut": {
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/CampaignStatus"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/AttackMode"
+          },
+          "planned": {
+            "type": "integer",
+            "title": "Planned",
+            "description": "Attacks (or adaptive missions) planned"
+          },
+          "written": {
+            "type": "integer",
+            "title": "Written",
+            "description": "Attack texts produced: translated by Sarvam and language-checked"
+          },
+          "in_flight": {
+            "type": "integer",
+            "title": "In Flight",
+            "description": "Sent to the target, waiting for the reply or the verdict"
+          },
+          "analysed": {
+            "type": "integer",
+            "title": "Analysed",
+            "description": "Replies with a verdict"
+          },
+          "decided_by_rules": {
+            "type": "integer",
+            "title": "Decided By Rules"
+          },
+          "decided_by_judge": {
+            "type": "integer",
+            "title": "Decided By Judge"
+          },
+          "vulnerable": {
+            "type": "integer",
+            "title": "Vulnerable"
+          },
+          "safe": {
+            "type": "integer",
+            "title": "Safe"
+          },
+          "errors": {
+            "type": "integer",
+            "title": "Errors"
+          },
+          "recent": {
+            "items": {
+              "$ref": "#/components/schemas/LiveEvent"
+            },
+            "type": "array",
+            "title": "Recent"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "mode",
+          "planned",
+          "written",
+          "in_flight",
+          "analysed",
+          "decided_by_rules",
+          "decided_by_judge",
+          "vulnerable",
+          "safe",
+          "errors",
+          "recent"
+        ],
+        "title": "CampaignLiveOut",
+        "description": "Per-stage counts for the live pipeline view. Attacks run in parallel, so each count is\n'how many attacks have reached this step' rather than a single global phase."
+      },
+      "CampaignOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "target_id": {
+            "type": "integer",
+            "title": "Target Id"
+          },
+          "target_name": {
+            "type": "string",
+            "title": "Target Name"
+          },
+          "config": {
+            "$ref": "#/components/schemas/CampaignConfig-Output"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CampaignStatus"
+          },
+          "total_cases": {
+            "type": "integer",
+            "title": "Total Cases"
+          },
+          "completed_cases": {
+            "type": "integer",
+            "title": "Completed Cases"
+          },
+          "progress": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Progress"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/CampaignCounts"
+          },
+          "parent_campaign_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Campaign Id"
+          },
+          "regression_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Regression Id",
+            "description": "Set when this campaign is a regression rerun"
+          },
+          "latest_regression_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Regression Id",
+            "description": "Most recent regression run of this campaign"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "target_id",
+          "target_name",
+          "config",
+          "status",
+          "total_cases",
+          "completed_cases",
+          "progress",
+          "counts",
+          "parent_campaign_id",
+          "regression_id",
+          "latest_regression_id",
+          "error_message",
+          "created_at",
+          "started_at",
+          "finished_at"
+        ],
+        "title": "CampaignOut"
+      },
+      "CampaignReport": {
+        "properties": {
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Generated At"
+          },
+          "campaign": {
+            "$ref": "#/components/schemas/CampaignOut"
+          },
+          "target": {
+            "$ref": "#/components/schemas/TargetOut"
+          },
+          "breakdown": {
+            "$ref": "#/components/schemas/SecurityBreakdown"
+          },
+          "top_findings": {
+            "items": {
+              "$ref": "#/components/schemas/ResultDetail"
+            },
+            "type": "array",
+            "title": "Top Findings"
+          },
+          "recommendations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recommendations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "generated_at",
+          "campaign",
+          "target",
+          "breakdown",
+          "top_findings",
+          "recommendations"
+        ],
+        "title": "CampaignReport"
+      },
+      "CampaignStatus": {
+        "type": "string",
+        "enum": [
+          "queued",
+          "running",
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "title": "CampaignStatus"
+      },
+      "CategoryOption": {
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "label",
+          "description"
+        ],
+        "title": "CategoryOption"
+      },
+      "CategoryStat": {
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "vulnerable": {
+            "type": "integer",
+            "title": "Vulnerable"
+          },
+          "vulnerability_rate": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Vulnerability Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "category",
+          "total",
+          "vulnerable",
+          "vulnerability_rate"
+        ],
+        "title": "CategoryStat"
+      },
+      "Confidence": {
+        "type": "string",
+        "enum": [
+          "confirmed",
+          "likely"
+        ],
+        "title": "Confidence"
+      },
+      "DashboardSummary": {
+        "properties": {
+          "total_campaigns": {
+            "type": "integer",
+            "title": "Total Campaigns"
+          },
+          "breakdown": {
+            "$ref": "#/components/schemas/SecurityBreakdown"
+          },
+          "recent_campaigns": {
+            "items": {
+              "$ref": "#/components/schemas/CampaignOut"
+            },
+            "type": "array",
+            "title": "Recent Campaigns"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "total_campaigns",
+          "breakdown",
+          "recent_campaigns"
+        ],
+        "title": "DashboardSummary"
+      },
+      "DetectorHit": {
+        "properties": {
+          "detector": {
+            "$ref": "#/components/schemas/DetectorName"
+          },
+          "fired": {
+            "type": "boolean",
+            "title": "Fired"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          },
+          "evidence": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evidence"
+          },
+          "spans": {
+            "items": {
+              "$ref": "#/components/schemas/TextSpan"
+            },
+            "type": "array",
+            "title": "Spans"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "detector",
+          "fired",
+          "score",
+          "evidence",
+          "spans"
+        ],
+        "title": "DetectorHit"
+      },
+      "DetectorName": {
+        "type": "string",
+        "enum": [
+          "canary",
+          "marker",
+          "pii",
+          "prompt_leak",
+          "refusal",
+          "judge"
+        ],
+        "title": "DetectorName"
+      },
+      "ErrorBody": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "Machine-readable error code, e.g. `not_found`"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "details": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Details"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "details"
+        ],
+        "title": "ErrorBody"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorBody"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "title": "ErrorResponse"
+      },
+      "FixApplyMode": {
+        "type": "string",
+        "enum": [
+          "webhook",
+          "manual"
+        ],
+        "title": "FixApplyMode"
+      },
+      "FixApplyRequest": {
+        "properties": {
+          "via": {
+            "$ref": "#/components/schemas/FixApplyMode"
+          },
+          "trials": {
+            "type": "integer",
+            "maximum": 3,
+            "minimum": 1,
+            "title": "Trials",
+            "default": 1
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "via"
+        ],
+        "title": "FixApplyRequest"
+      },
+      "FixList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/FixProposalOut"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "FixList"
+      },
+      "FixProposalOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "campaign_id": {
+            "type": "integer",
+            "title": "Campaign Id"
+          },
+          "target_id": {
+            "type": "integer",
+            "title": "Target Id"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "changes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Changes"
+          },
+          "revised_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revised Prompt"
+          },
+          "addendum": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Addendum"
+          },
+          "previous_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Previous Prompt"
+          },
+          "failures_considered": {
+            "type": "integer",
+            "title": "Failures Considered"
+          },
+          "fix_set_size": {
+            "type": "integer",
+            "title": "Fix Set Size",
+            "description": "Successful attacks shown to the patch author"
+          },
+          "heldout_set_size": {
+            "type": "integer",
+            "title": "Heldout Set Size",
+            "description": "Successful attacks held back to test generalization"
+          },
+          "helpfulness_before": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HelpfulnessOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "helpfulness_after": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HelpfulnessOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "applied": {
+            "type": "boolean",
+            "title": "Applied"
+          },
+          "applied_via": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FixApplyMode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "applied_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Applied At"
+          },
+          "regression_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Regression Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "campaign_id",
+          "target_id",
+          "summary",
+          "changes",
+          "revised_prompt",
+          "addendum",
+          "previous_prompt",
+          "failures_considered",
+          "fix_set_size",
+          "heldout_set_size",
+          "helpfulness_before",
+          "helpfulness_after",
+          "applied",
+          "applied_via",
+          "applied_at",
+          "regression_id",
+          "created_at"
+        ],
+        "title": "FixProposalOut"
+      },
+      "GeneralizationOut": {
+        "properties": {
+          "fix_set_total": {
+            "type": "integer",
+            "title": "Fix Set Total"
+          },
+          "fix_set_still_vulnerable": {
+            "type": "integer",
+            "title": "Fix Set Still Vulnerable"
+          },
+          "heldout_total": {
+            "type": "integer",
+            "title": "Heldout Total"
+          },
+          "heldout_still_vulnerable": {
+            "type": "integer",
+            "title": "Heldout Still Vulnerable"
+          },
+          "complete": {
+            "type": "boolean",
+            "title": "Complete"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "fix_set_total",
+          "fix_set_still_vulnerable",
+          "heldout_total",
+          "heldout_still_vulnerable",
+          "complete"
+        ],
+        "title": "GeneralizationOut",
+        "description": "Did the patch fix only the attacks it was shown, or also ones it never saw?"
+      },
+      "HardeningOut": {
+        "properties": {
+          "root_campaign_id": {
+            "type": "integer",
+            "title": "Root Campaign Id"
+          },
+          "latest_campaign_id": {
+            "type": "integer",
+            "title": "Latest Campaign Id"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/HardeningStep"
+            },
+            "type": "array",
+            "title": "Steps"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "root_campaign_id",
+          "latest_campaign_id",
+          "steps"
+        ],
+        "title": "HardeningOut"
+      },
+      "HardeningStep": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "campaign_id": {
+            "type": "integer",
+            "title": "Campaign Id"
+          },
+          "regression_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Regression Id"
+          },
+          "fix_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fix Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CampaignStatus"
+          },
+          "vulnerable": {
+            "type": "integer",
+            "title": "Vulnerable",
+            "description": "Attacks that still succeed at this step"
+          },
+          "rerun_total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rerun Total",
+            "description": "Attacks replayed at this step (null for the original run)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "label",
+          "campaign_id",
+          "regression_id",
+          "fix_id",
+          "status",
+          "vulnerable",
+          "rerun_total"
+        ],
+        "title": "HardeningStep"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "degraded"
+            ],
+            "title": "Status"
+          },
+          "app_name": {
+            "type": "string",
+            "title": "App Name"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "database_ok": {
+            "type": "boolean",
+            "title": "Database Ok"
+          },
+          "sarvam_configured": {
+            "type": "boolean",
+            "title": "Sarvam Configured"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "app_name",
+          "version",
+          "database_ok",
+          "sarvam_configured"
+        ],
+        "title": "HealthResponse"
+      },
+      "HeatmapCell": {
+        "properties": {
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "vulnerable": {
+            "type": "integer",
+            "title": "Vulnerable"
+          },
+          "vulnerability_rate": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Vulnerability Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "language",
+          "category",
+          "total",
+          "vulnerable",
+          "vulnerability_rate"
+        ],
+        "title": "HeatmapCell"
+      },
+      "HelpfulnessItem": {
+        "properties": {
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "reply_excerpt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply Excerpt"
+          },
+          "answered": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Answered",
+            "description": "null when the target errored"
+          },
+          "rationale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rationale"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "language",
+          "question",
+          "reply_excerpt",
+          "answered",
+          "rationale"
+        ],
+        "title": "HelpfulnessItem"
+      },
+      "HelpfulnessLanguageStat": {
+        "properties": {
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "answered": {
+            "type": "integer",
+            "title": "Answered"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "language",
+          "total",
+          "answered"
+        ],
+        "title": "HelpfulnessLanguageStat"
+      },
+      "HelpfulnessOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "phase": {
+            "type": "string",
+            "title": "Phase",
+            "description": "'before' or 'after' the fix"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CampaignStatus"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "answered": {
+            "type": "integer",
+            "title": "Answered"
+          },
+          "errors": {
+            "type": "integer",
+            "title": "Errors"
+          },
+          "answer_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Answer Rate",
+            "description": "answered / (total - errors); null until finished"
+          },
+          "by_language": {
+            "items": {
+              "$ref": "#/components/schemas/HelpfulnessLanguageStat"
+            },
+            "type": "array",
+            "title": "By Language"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/HelpfulnessItem"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "phase",
+          "status",
+          "total",
+          "answered",
+          "errors",
+          "answer_rate",
+          "by_language",
+          "items"
+        ],
+        "title": "HelpfulnessOut",
+        "description": "Over-refusal check: how many legitimate banking questions the bot still answers."
+      },
+      "HttpMethod": {
+        "type": "string",
+        "enum": [
+          "POST",
+          "PUT"
+        ],
+        "title": "HttpMethod"
+      },
+      "LanguageCode": {
+        "type": "string",
+        "enum": [
+          "en-IN",
+          "hi-IN",
+          "kn-IN",
+          "te-IN",
+          "ta-IN"
+        ],
+        "title": "LanguageCode"
+      },
+      "LanguageOption": {
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "native_label": {
+            "type": "string",
+            "title": "Native Label"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "label",
+          "native_label"
+        ],
+        "title": "LanguageOption"
+      },
+      "LanguageStat": {
+        "properties": {
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "vulnerable": {
+            "type": "integer",
+            "title": "Vulnerable"
+          },
+          "vulnerability_rate": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Vulnerability Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "language",
+          "total",
+          "vulnerable",
+          "vulnerability_rate"
+        ],
+        "title": "LanguageStat"
+      },
+      "LiveEvent": {
+        "properties": {
+          "test_case_id": {
+            "type": "integer",
+            "title": "Test Case Id"
+          },
+          "result_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Id"
+          },
+          "turn": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Turn"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/ScriptVariant"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "attack_excerpt": {
+            "type": "string",
+            "title": "Attack Excerpt"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "attacking",
+              "done"
+            ],
+            "title": "Stage"
+          },
+          "verdict": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Verdict"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "severity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Severity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "decided_by": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "rules",
+                  "judge"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided By"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "test_case_id",
+          "result_id",
+          "turn",
+          "language",
+          "variant",
+          "category",
+          "attack_excerpt",
+          "stage",
+          "verdict",
+          "severity",
+          "decided_by",
+          "created_at"
+        ],
+        "title": "LiveEvent",
+        "description": "One attack in the live feed: written (and translated), then answered and judged."
+      },
+      "MaskedHeader": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "value_masked": {
+            "type": "string",
+            "title": "Value Masked"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "value_masked"
+        ],
+        "title": "MaskedHeader"
+      },
+      "MetaEnumsResponse": {
+        "properties": {
+          "languages": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageOption"
+            },
+            "type": "array",
+            "title": "Languages"
+          },
+          "script_variants": {
+            "items": {
+              "$ref": "#/components/schemas/ScriptVariantOption"
+            },
+            "type": "array",
+            "title": "Script Variants"
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/CategoryOption"
+            },
+            "type": "array",
+            "title": "Categories"
+          },
+          "wrappers": {
+            "items": {
+              "$ref": "#/components/schemas/WrapperOption"
+            },
+            "type": "array",
+            "title": "Wrappers"
+          },
+          "severities": {
+            "items": {
+              "$ref": "#/components/schemas/SeverityOption"
+            },
+            "type": "array",
+            "title": "Severities"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "languages",
+          "script_variants",
+          "categories",
+          "wrappers",
+          "severities"
+        ],
+        "title": "MetaEnumsResponse"
+      },
+      "MissionList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MissionOut"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "breached": {
+            "type": "integer",
+            "title": "Breached"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "breached",
+          "total"
+        ],
+        "title": "MissionList"
+      },
+      "MissionOut": {
+        "properties": {
+          "mission_id": {
+            "type": "string",
+            "title": "Mission Id"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "goal": {
+            "type": "string",
+            "title": "Goal"
+          },
+          "breached": {
+            "type": "boolean",
+            "title": "Breached"
+          },
+          "turns_used": {
+            "type": "integer",
+            "title": "Turns Used"
+          },
+          "winning_tactic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Winning Tactic"
+          },
+          "turns": {
+            "items": {
+              "$ref": "#/components/schemas/MissionTurn"
+            },
+            "type": "array",
+            "title": "Turns"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "mission_id",
+          "category",
+          "language",
+          "goal",
+          "breached",
+          "turns_used",
+          "winning_tactic",
+          "turns"
+        ],
+        "title": "MissionOut"
+      },
+      "MissionTurn": {
+        "properties": {
+          "result_id": {
+            "type": "integer",
+            "title": "Result Id"
+          },
+          "turn": {
+            "type": "integer",
+            "title": "Turn"
+          },
+          "tactic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tactic"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/ScriptVariant"
+          },
+          "attack_text": {
+            "type": "string",
+            "title": "Attack Text"
+          },
+          "english_meaning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "English Meaning"
+          },
+          "attacker_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attacker Note",
+            "description": "Why the attacker chose this tactic (its reasoning)"
+          },
+          "reply_excerpt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply Excerpt"
+          },
+          "verdict": {
+            "$ref": "#/components/schemas/Verdict"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Confidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "severity": {
+            "$ref": "#/components/schemas/Severity"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_id",
+          "turn",
+          "tactic",
+          "variant",
+          "attack_text",
+          "english_meaning",
+          "attacker_note",
+          "reply_excerpt",
+          "verdict",
+          "confidence",
+          "severity"
+        ],
+        "title": "MissionTurn"
+      },
+      "Modality": {
+        "type": "string",
+        "enum": [
+          "text",
+          "voice"
+        ],
+        "title": "Modality"
+      },
+      "Mutation": {
+        "type": "string",
+        "enum": [
+          "adaptive",
+          "translate",
+          "code_mix",
+          "romanize",
+          "script_switch",
+          "roleplay_wrap",
+          "translation_wrap",
+          "tts"
+        ],
+        "title": "Mutation",
+        "description": "Every step that can appear in a test case's mutation chain."
+      },
+      "RegressionCaseOut": {
+        "properties": {
+          "base_test_case_id": {
+            "type": "integer",
+            "title": "Base Test Case Id"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/ScriptVariant"
+          },
+          "attack_text": {
+            "type": "string",
+            "title": "Attack Text"
+          },
+          "before_severity": {
+            "$ref": "#/components/schemas/Severity"
+          },
+          "after_severity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Severity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "vulnerable_trials": {
+            "type": "integer",
+            "title": "Vulnerable Trials"
+          },
+          "trials": {
+            "type": "integer",
+            "title": "Trials"
+          },
+          "outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RegressionOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "split": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "fix",
+                  "heldout"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Split",
+            "description": "'fix' = shown to the patch author; 'heldout' = never seen by it; null = not part of the fix"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "base_test_case_id",
+          "category",
+          "language",
+          "variant",
+          "attack_text",
+          "before_severity",
+          "after_severity",
+          "vulnerable_trials",
+          "trials",
+          "outcome",
+          "split"
+        ],
+        "title": "RegressionCaseOut"
+      },
+      "RegressionCreate": {
+        "properties": {
+          "only_failed": {
+            "type": "boolean",
+            "title": "Only Failed",
+            "default": true
+          },
+          "trials": {
+            "type": "integer",
+            "maximum": 3,
+            "minimum": 1,
+            "title": "Trials",
+            "default": 3
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RegressionCreate"
+      },
+      "RegressionOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "base_campaign_id": {
+            "type": "integer",
+            "title": "Base Campaign Id"
+          },
+          "new_campaign_id": {
+            "type": "integer",
+            "title": "New Campaign Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CampaignStatus"
+          },
+          "trials": {
+            "type": "integer",
+            "title": "Trials"
+          },
+          "only_failed": {
+            "type": "boolean",
+            "title": "Only Failed"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/RegressionSummary"
+          },
+          "cases": {
+            "items": {
+              "$ref": "#/components/schemas/RegressionCaseOut"
+            },
+            "type": "array",
+            "title": "Cases"
+          },
+          "fix_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fix Id",
+            "description": "The auto-fix proposal this rerun verifies, if any"
+          },
+          "fix_summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fix Summary"
+          },
+          "generalization": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GeneralizationOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "base_campaign_id",
+          "new_campaign_id",
+          "status",
+          "trials",
+          "only_failed",
+          "summary",
+          "cases",
+          "fix_id",
+          "fix_summary",
+          "generalization",
+          "created_at"
+        ],
+        "title": "RegressionOut"
+      },
+      "RegressionOutcome": {
+        "type": "string",
+        "enum": [
+          "fixed",
+          "still_vulnerable",
+          "flaky",
+          "new_vulnerability"
+        ],
+        "title": "RegressionOutcome"
+      },
+      "RegressionSummary": {
+        "properties": {
+          "fixed": {
+            "type": "integer",
+            "title": "Fixed",
+            "default": 0
+          },
+          "still_vulnerable": {
+            "type": "integer",
+            "title": "Still Vulnerable",
+            "default": 0
+          },
+          "flaky": {
+            "type": "integer",
+            "title": "Flaky",
+            "default": 0
+          },
+          "new_vulnerability": {
+            "type": "integer",
+            "title": "New Vulnerability",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "fixed",
+          "still_vulnerable",
+          "flaky",
+          "new_vulnerability"
+        ],
+        "title": "RegressionSummary"
+      },
+      "ResultDetail": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "campaign_id": {
+            "type": "integer",
+            "title": "Campaign Id"
+          },
+          "test_case_id": {
+            "type": "integer",
+            "title": "Test Case Id"
+          },
+          "trial": {
+            "type": "integer",
+            "title": "Trial"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/ScriptVariant"
+          },
+          "modality": {
+            "$ref": "#/components/schemas/Modality"
+          },
+          "attack_text": {
+            "type": "string",
+            "title": "Attack Text"
+          },
+          "verdict": {
+            "$ref": "#/components/schemas/Verdict"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Confidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "severity": {
+            "$ref": "#/components/schemas/Severity"
+          },
+          "latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latency Ms"
+          },
+          "mission_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mission Id"
+          },
+          "turn": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Turn"
+          },
+          "tactic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tactic"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "technique": {
+            "type": "string",
+            "title": "Technique"
+          },
+          "mutation_chain": {
+            "items": {
+              "$ref": "#/components/schemas/Mutation"
+            },
+            "type": "array",
+            "title": "Mutation Chain"
+          },
+          "english_gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "English Gloss"
+          },
+          "detected_language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detected Language"
+          },
+          "detected_script": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detected Script"
+          },
+          "marker_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marker Token"
+          },
+          "http_status": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Http Status"
+          },
+          "raw_response": {
+            "type": "string",
+            "title": "Raw Response"
+          },
+          "extracted_reply": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extracted Reply"
+          },
+          "detector_hits": {
+            "items": {
+              "$ref": "#/components/schemas/DetectorHit"
+            },
+            "type": "array",
+            "title": "Detector Hits"
+          },
+          "judge_rationale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Judge Rationale"
+          },
+          "attacker_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attacker Note"
+          },
+          "remediation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remediation"
+          },
+          "audio_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audio Id"
+          },
+          "transcript": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transcript"
+          },
+          "transcript_drift": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transcript Drift"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "campaign_id",
+          "test_case_id",
+          "trial",
+          "category",
+          "language",
+          "variant",
+          "modality",
+          "attack_text",
+          "verdict",
+          "confidence",
+          "severity",
+          "latency_ms",
+          "mission_id",
+          "turn",
+          "tactic",
+          "created_at",
+          "technique",
+          "mutation_chain",
+          "english_gloss",
+          "detected_language",
+          "detected_script",
+          "marker_token",
+          "http_status",
+          "raw_response",
+          "extracted_reply",
+          "detector_hits",
+          "judge_rationale",
+          "attacker_note",
+          "remediation",
+          "audio_id",
+          "transcript",
+          "transcript_drift"
+        ],
+        "title": "ResultDetail"
+      },
+      "ResultPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ResultSummary"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "offset",
+          "limit"
+        ],
+        "title": "ResultPage"
+      },
+      "ResultSummary": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "campaign_id": {
+            "type": "integer",
+            "title": "Campaign Id"
+          },
+          "test_case_id": {
+            "type": "integer",
+            "title": "Test Case Id"
+          },
+          "trial": {
+            "type": "integer",
+            "title": "Trial"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/ScriptVariant"
+          },
+          "modality": {
+            "$ref": "#/components/schemas/Modality"
+          },
+          "attack_text": {
+            "type": "string",
+            "title": "Attack Text"
+          },
+          "verdict": {
+            "$ref": "#/components/schemas/Verdict"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Confidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "severity": {
+            "$ref": "#/components/schemas/Severity"
+          },
+          "latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latency Ms"
+          },
+          "mission_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mission Id"
+          },
+          "turn": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Turn"
+          },
+          "tactic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tactic"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "campaign_id",
+          "test_case_id",
+          "trial",
+          "category",
+          "language",
+          "variant",
+          "modality",
+          "attack_text",
+          "verdict",
+          "confidence",
+          "severity",
+          "latency_ms",
+          "mission_id",
+          "turn",
+          "tactic",
+          "created_at"
+        ],
+        "title": "ResultSummary"
+      },
+      "ScriptVariant": {
+        "type": "string",
+        "enum": [
+          "native",
+          "romanized",
+          "code_mixed"
+        ],
+        "title": "ScriptVariant"
+      },
+      "ScriptVariantOption": {
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/ScriptVariant"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "label",
+          "description"
+        ],
+        "title": "ScriptVariantOption"
+      },
+      "SecurityBreakdown": {
+        "properties": {
+          "total_tests": {
+            "type": "integer",
+            "title": "Total Tests"
+          },
+          "total_vulnerabilities": {
+            "type": "integer",
+            "title": "Total Vulnerabilities"
+          },
+          "vulnerabilities_confirmed": {
+            "type": "integer",
+            "title": "Vulnerabilities Confirmed",
+            "description": "Proven by a deterministic detector (canary, marker, PII, prompt overlap)"
+          },
+          "vulnerabilities_likely": {
+            "type": "integer",
+            "title": "Vulnerabilities Likely",
+            "description": "Decided by the Sarvam-105B judge (quoted evidence required)"
+          },
+          "pass_rate": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Pass Rate"
+          },
+          "severity_distribution": {
+            "$ref": "#/components/schemas/SeverityCounts"
+          },
+          "by_language": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageStat"
+            },
+            "type": "array",
+            "title": "By Language"
+          },
+          "by_variant": {
+            "items": {
+              "$ref": "#/components/schemas/VariantStat"
+            },
+            "type": "array",
+            "title": "By Variant"
+          },
+          "by_category": {
+            "items": {
+              "$ref": "#/components/schemas/CategoryStat"
+            },
+            "type": "array",
+            "title": "By Category"
+          },
+          "heatmap": {
+            "items": {
+              "$ref": "#/components/schemas/HeatmapCell"
+            },
+            "type": "array",
+            "title": "Heatmap"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "total_tests",
+          "total_vulnerabilities",
+          "vulnerabilities_confirmed",
+          "vulnerabilities_likely",
+          "pass_rate",
+          "severity_distribution",
+          "by_language",
+          "by_variant",
+          "by_category",
+          "heatmap"
+        ],
+        "title": "SecurityBreakdown"
+      },
+      "Severity": {
+        "type": "string",
+        "enum": [
+          "critical",
+          "high",
+          "medium",
+          "low",
+          "none"
+        ],
+        "title": "Severity"
+      },
+      "SeverityCounts": {
+        "properties": {
+          "critical": {
+            "type": "integer",
+            "title": "Critical",
+            "default": 0
+          },
+          "high": {
+            "type": "integer",
+            "title": "High",
+            "default": 0
+          },
+          "medium": {
+            "type": "integer",
+            "title": "Medium",
+            "default": 0
+          },
+          "low": {
+            "type": "integer",
+            "title": "Low",
+            "default": 0
+          },
+          "none": {
+            "type": "integer",
+            "title": "None",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "critical",
+          "high",
+          "medium",
+          "low",
+          "none"
+        ],
+        "title": "SeverityCounts"
+      },
+      "SeverityOption": {
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/Severity"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "label",
+          "rank"
+        ],
+        "title": "SeverityOption"
+      },
+      "SynthesizeRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 2500,
+            "minLength": 1,
+            "title": "Text"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "speaker": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speaker"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "text",
+          "language"
+        ],
+        "title": "SynthesizeRequest"
+      },
+      "TargetCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/TargetKind",
+            "default": "text"
+          },
+          "base_url": {
+            "type": "string",
+            "maxLength": 2048,
+            "minLength": 8,
+            "pattern": "^https?://",
+            "title": "Base Url",
+            "description": "Full endpoint URL the attack prompt is sent to"
+          },
+          "method": {
+            "$ref": "#/components/schemas/HttpMethod",
+            "default": "POST"
+          },
+          "body_template": {
+            "type": "string",
+            "maxLength": 20000,
+            "minLength": 1,
+            "title": "Body Template",
+            "description": "JSON request body; must contain the `{{prompt}}` placeholder"
+          },
+          "response_path": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Response Path",
+            "description": "Dotted path to the reply text, e.g. `choices.0.message.content`"
+          },
+          "canary_strings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Canary Strings"
+          },
+          "system_prompt_hint": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 20000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Prompt Hint"
+          },
+          "fix_webhook_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048,
+                "pattern": "^https?://"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fix Webhook Url",
+            "description": "Optional: Chakravyuh POSTs a patched system prompt here ({system_prompt, addendum}) so fixes can be applied and verified in one click"
+          },
+          "legit_questions": {
+            "items": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Legit Questions",
+            "description": "Ordinary questions a real user of this app asks (English; translated per language). Used by the over-refusal check before/after a fix. Empty = the built-in banking set"
+          },
+          "headers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Headers",
+            "description": "Request headers (e.g. auth). Stored server-side, never returned unmasked."
+          },
+          "ownership_confirmed": {
+            "type": "boolean",
+            "const": true,
+            "title": "Ownership Confirmed",
+            "description": "User attests they own or are authorized to test this application"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "base_url",
+          "body_template",
+          "response_path",
+          "ownership_confirmed"
+        ],
+        "title": "TargetCreate"
+      },
+      "TargetKind": {
+        "type": "string",
+        "enum": [
+          "text",
+          "voice"
+        ],
+        "title": "TargetKind"
+      },
+      "TargetList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TargetOut"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "TargetList"
+      },
+      "TargetOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/TargetKind"
+          },
+          "base_url": {
+            "type": "string",
+            "title": "Base Url"
+          },
+          "method": {
+            "$ref": "#/components/schemas/HttpMethod"
+          },
+          "headers": {
+            "items": {
+              "$ref": "#/components/schemas/MaskedHeader"
+            },
+            "type": "array",
+            "title": "Headers"
+          },
+          "body_template": {
+            "type": "string",
+            "title": "Body Template"
+          },
+          "response_path": {
+            "type": "string",
+            "title": "Response Path"
+          },
+          "canary_strings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Canary Strings"
+          },
+          "system_prompt_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Prompt Hint"
+          },
+          "fix_webhook_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fix Webhook Url"
+          },
+          "legit_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Legit Questions"
+          },
+          "verification_status": {
+            "$ref": "#/components/schemas/VerificationStatus"
+          },
+          "verification_token": {
+            "type": "string",
+            "title": "Verification Token"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "base_url",
+          "method",
+          "headers",
+          "body_template",
+          "response_path",
+          "canary_strings",
+          "system_prompt_hint",
+          "fix_webhook_url",
+          "legit_questions",
+          "verification_status",
+          "verification_token",
+          "created_at"
+        ],
+        "title": "TargetOut"
+      },
+      "TargetUpdate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/TargetKind",
+            "default": "text"
+          },
+          "base_url": {
+            "type": "string",
+            "maxLength": 2048,
+            "minLength": 8,
+            "pattern": "^https?://",
+            "title": "Base Url",
+            "description": "Full endpoint URL the attack prompt is sent to"
+          },
+          "method": {
+            "$ref": "#/components/schemas/HttpMethod",
+            "default": "POST"
+          },
+          "body_template": {
+            "type": "string",
+            "maxLength": 20000,
+            "minLength": 1,
+            "title": "Body Template",
+            "description": "JSON request body; must contain the `{{prompt}}` placeholder"
+          },
+          "response_path": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Response Path",
+            "description": "Dotted path to the reply text, e.g. `choices.0.message.content`"
+          },
+          "canary_strings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Canary Strings"
+          },
+          "system_prompt_hint": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 20000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System Prompt Hint"
+          },
+          "fix_webhook_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048,
+                "pattern": "^https?://"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fix Webhook Url",
+            "description": "Optional: Chakravyuh POSTs a patched system prompt here ({system_prompt, addendum}) so fixes can be applied and verified in one click"
+          },
+          "legit_questions": {
+            "items": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Legit Questions",
+            "description": "Ordinary questions a real user of this app asks (English; translated per language). Used by the over-refusal check before/after a fix. Empty = the built-in banking set"
+          },
+          "headers": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Headers",
+            "description": "Omit or null to keep existing headers; provide a map to replace them"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "base_url",
+          "body_template",
+          "response_path"
+        ],
+        "title": "TargetUpdate"
+      },
+      "TestConnectionRequest": {
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Prompt",
+            "default": "Hello! What can you help me with?"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "TestConnectionRequest"
+      },
+      "TestConnectionResponse": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "title": "Ok"
+          },
+          "http_status": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Http Status"
+          },
+          "latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latency Ms"
+          },
+          "extracted_reply": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extracted Reply"
+          },
+          "raw_response_preview": {
+            "type": "string",
+            "title": "Raw Response Preview"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "ok",
+          "http_status",
+          "latency_ms",
+          "extracted_reply",
+          "raw_response_preview",
+          "error"
+        ],
+        "title": "TestConnectionResponse"
+      },
+      "TextSpan": {
+        "properties": {
+          "start": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Start"
+          },
+          "end": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "End"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "start",
+          "end"
+        ],
+        "title": "TextSpan",
+        "description": "Character offsets into `extracted_reply` to highlight as evidence."
+      },
+      "VariantStat": {
+        "properties": {
+          "variant": {
+            "$ref": "#/components/schemas/ScriptVariant"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "vulnerable": {
+            "type": "integer",
+            "title": "Vulnerable"
+          },
+          "vulnerability_rate": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Vulnerability Rate"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "variant",
+          "total",
+          "vulnerable",
+          "vulnerability_rate"
+        ],
+        "title": "VariantStat"
+      },
+      "Verdict": {
+        "type": "string",
+        "enum": [
+          "vulnerable",
+          "safe",
+          "inconclusive",
+          "error"
+        ],
+        "title": "Verdict"
+      },
+      "VerificationMethod": {
+        "type": "string",
+        "enum": [
+          "token_file",
+          "allowlisted_host"
+        ],
+        "title": "VerificationMethod"
+      },
+      "VerificationStatus": {
+        "type": "string",
+        "enum": [
+          "unverified",
+          "verified"
+        ],
+        "title": "VerificationStatus"
+      },
+      "VerifyTargetResponse": {
+        "properties": {
+          "verification_status": {
+            "$ref": "#/components/schemas/VerificationStatus"
+          },
+          "method": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VerificationMethod"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "verification_status",
+          "method",
+          "message"
+        ],
+        "title": "VerifyTargetResponse"
+      },
+      "VoiceComparisonOut": {
+        "properties": {
+          "base_campaign_id": {
+            "type": "integer",
+            "title": "Base Campaign Id"
+          },
+          "voice_campaign_id": {
+            "type": "integer",
+            "title": "Voice Campaign Id"
+          },
+          "text_baseline": {
+            "type": "string",
+            "enum": [
+              "fresh",
+              "original"
+            ],
+            "title": "Text Baseline",
+            "description": "'fresh' = the text version was re-sent alongside the voice one and judged identically (fair comparison); 'original' = older replay compared against the original campaign's verdicts"
+          },
+          "pairs": {
+            "type": "integer",
+            "title": "Pairs",
+            "description": "Attacks with a usable result in both modalities"
+          },
+          "text_succeeded": {
+            "type": "integer",
+            "title": "Text Succeeded"
+          },
+          "voice_succeeded": {
+            "type": "integer",
+            "title": "Voice Succeeded"
+          },
+          "both": {
+            "type": "integer",
+            "title": "Both"
+          },
+          "text_only": {
+            "type": "integer",
+            "title": "Text Only",
+            "description": "Succeeded as text, failed when spoken"
+          },
+          "voice_only": {
+            "type": "integer",
+            "title": "Voice Only",
+            "description": "Failed as text, succeeded when spoken"
+          },
+          "mean_transcript_drift": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mean Transcript Drift"
+          },
+          "by_language": {
+            "items": {
+              "$ref": "#/components/schemas/VoiceLanguageDelta"
+            },
+            "type": "array",
+            "title": "By Language"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/VoicePair"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "base_campaign_id",
+          "voice_campaign_id",
+          "text_baseline",
+          "pairs",
+          "text_succeeded",
+          "voice_succeeded",
+          "both",
+          "text_only",
+          "voice_only",
+          "mean_transcript_drift",
+          "by_language",
+          "items"
+        ],
+        "title": "VoiceComparisonOut"
+      },
+      "VoiceLanguageDelta": {
+        "properties": {
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "pairs": {
+            "type": "integer",
+            "title": "Pairs"
+          },
+          "text_succeeded": {
+            "type": "integer",
+            "title": "Text Succeeded"
+          },
+          "voice_succeeded": {
+            "type": "integer",
+            "title": "Voice Succeeded"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "language",
+          "pairs",
+          "text_succeeded",
+          "voice_succeeded"
+        ],
+        "title": "VoiceLanguageDelta"
+      },
+      "VoicePair": {
+        "properties": {
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "text_result_id": {
+            "type": "integer",
+            "title": "Text Result Id"
+          },
+          "voice_result_id": {
+            "type": "integer",
+            "title": "Voice Result Id"
+          },
+          "text_verdict": {
+            "$ref": "#/components/schemas/Verdict"
+          },
+          "voice_verdict": {
+            "$ref": "#/components/schemas/Verdict"
+          },
+          "transcript_drift": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transcript Drift"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "language",
+          "category",
+          "text_result_id",
+          "voice_result_id",
+          "text_verdict",
+          "voice_verdict",
+          "transcript_drift"
+        ],
+        "title": "VoicePair",
+        "description": "The SAME attack sent as text and as speech."
+      },
+      "VoiceReplayRequest": {
+        "properties": {
+          "max_attacks": {
+            "type": "integer",
+            "maximum": 30,
+            "minimum": 2,
+            "title": "Max Attacks",
+            "default": 10
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "VoiceReplayRequest"
+      },
+      "VoiceTestRequest": {
+        "properties": {
+          "audio_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Audio Id"
+          },
+          "target_id": {
+            "type": "integer",
+            "title": "Target Id"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LanguageCode"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Spoken language; null lets Sarvam STT auto-detect"
+          },
+          "intended_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intended Text",
+            "description": "What the attacker meant to say (for drift)"
+          },
+          "code_mixed": {
+            "type": "boolean",
+            "title": "Code Mixed",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "audio_id",
+          "target_id",
+          "category"
+        ],
+        "title": "VoiceTestRequest"
+      },
+      "VoiceTestResponse": {
+        "properties": {
+          "transcript": {
+            "type": "string",
+            "title": "Transcript"
+          },
+          "detected_language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detected Language"
+          },
+          "transcript_drift": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transcript Drift"
+          },
+          "result": {
+            "$ref": "#/components/schemas/ResultDetail"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "transcript",
+          "detected_language",
+          "transcript_drift",
+          "result"
+        ],
+        "title": "VoiceTestResponse"
+      },
+      "WrapperOption": {
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/AttackWrapper"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "label",
+          "description"
+        ],
+        "title": "WrapperOption"
+      }
+    }
+  }
+}

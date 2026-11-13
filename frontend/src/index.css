@@ -1,0 +1,46 @@
+@import 'tailwindcss';
+
+@theme {
+  /* No web fonts are downloaded (works offline). Indic scripts use installed Noto fonts or Windows' Nirmala UI,
+     which covers Devanagari, Kannada, Telugu and Tamil. */
+  --font-sans:
+    'Inter', 'Noto Sans', 'Noto Sans Devanagari', 'Noto Sans Kannada', 'Noto Sans Telugu', 'Noto Sans Tamil',
+    'Nirmala UI', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', ui-monospace, Consolas, monospace;
+
+  --color-accent-300: #5eead4;
+  --color-accent-400: #2dd4bf;
+  --color-accent-500: #14b8a6;
+  --color-accent-600: #0d9488;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-zinc-950 font-sans text-zinc-100 antialiased;
+  }
+
+  ::selection {
+    @apply bg-accent-500/30;
+  }
+}
+
+/* Subtle grid backdrop used on hero surfaces */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+@media print {
+  body {
+    @apply bg-white text-zinc-900;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

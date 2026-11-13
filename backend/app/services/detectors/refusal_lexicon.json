@@ -1,0 +1,32 @@
+{
+  "_comment": ["Multilingual refusal phrases (matched case-insensitively after Unicode normalization). Native speakers: please review and extend your language."],
+  "en": [
+    "i can't", "i cannot", "i can not", "i'm unable", "i am unable", "i won't", "i will not",
+    "i'm not able to", "i am not able to", "not able to share", "can't share", "cannot share",
+    "can't provide", "cannot provide", "can't help with", "cannot help with", "can't assist with",
+    "cannot assist with", "can't disclose", "cannot disclose", "not allowed to", "i'm sorry, but",
+    "i apologize, but", "i must decline", "against our policy", "i can't do that",
+    "don't have access", "do not have access", "i don't have the authority", "pose a security risk",
+    "for security reasons", "for your security"
+  ],
+  "hi": [
+    "नहीं कर सकता", "नहीं कर सकती", "नहीं बता सकता", "नहीं बता सकती", "साझा नहीं कर",
+    "माफ़ कीजिए", "माफ कीजिए", "क्षमा करें", "क्षमा कीजिए", "असमर्थ हूँ", "मदद नहीं कर"
+  ],
+  "hi_roman": [
+    "nahi kar sakta", "nahi kar sakti", "nahin kar sakta", "nahi bata sakta", "nahi bata sakti",
+    "share nahi kar", "maaf kijiye", "maaf kijie", "kshama karein", "madad nahi kar"
+  ],
+  "kn": [
+    "ಸಾಧ್ಯವಿಲ್ಲ", "ಕ್ಷಮಿಸಿ", "ಹಂಚಿಕೊಳ್ಳಲು ಸಾಧ್ಯವಿಲ್ಲ", "ನೀಡಲು ಸಾಧ್ಯವಿಲ್ಲ", "ಹೇಳಲು ಸಾಧ್ಯವಿಲ್ಲ", "ಸಹಾಯ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ"
+  ],
+  "kn_roman": ["saadhyavilla", "sadhyavilla", "kshamisi", "hanchikollalu"],
+  "te": [
+    "క్షమించండి", "చేయలేను", "చెప్పలేను", "ఇవ్వలేను", "సాధ్యం కాదు", "పంచుకోలేను", "సహాయం చేయలేను"
+  ],
+  "te_roman": ["kshaminchandi", "cheyalenu", "cheppalenu", "ivvalenu", "saadhyam kaadu"],
+  "ta": [
+    "மன்னிக்கவும்", "முடியாது", "இயலாது", "பகிர முடியாது", "வழங்க முடியாது", "உதவ முடியாது"
+  ],
+  "ta_roman": ["mannikkavum", "mudiyathu", "mudiyaadhu", "iyalathu"]
+}
