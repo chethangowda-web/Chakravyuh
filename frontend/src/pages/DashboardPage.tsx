@@ -1,15 +1,15 @@
-import { Activity, Bug, Radar, ShieldAlert, ShieldCheck } from 'lucide-react'
+import { Activity, Bug, Radar, ShieldCheck } from 'lucide-react'
 import { Link } from 'react-router'
 
 import { useDashboard } from '../api/hooks/queries'
 import { StatusBadge } from '../components/domain/Badges'
 import { CategoryHeatmap, LanguageGapChart, SeverityDonut, VariantBars } from '../components/charts/Charts'
 import { ConfirmationBar } from '../components/domain/ConfirmationBar'
-import { Badge } from '../components/ui/Badge'
 import { LinkButton } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
 import { ErrorNotice } from '../components/ui/ErrorNotice'
 import { EmptyState, ProgressBar, StatTile } from '../components/ui/Feedback'
+import { PageHeader } from '../components/ui/PageHeader'
 import { Skeleton } from '../components/ui/Skeleton'
 import { pct, timeAgo } from '../lib/format'
 
@@ -38,26 +38,15 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <section className="bg-grid relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/40 px-8 py-8">
-        <div className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-accent-500/10 blur-3xl" />
-        <Badge tone="accent">
-          <ShieldAlert className="size-3.5" aria-hidden /> Indic red-teaming lab
-        </Badge>
-        <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight text-zinc-50">
-          Your guardrails speak English.{' '}
-          <span className="text-accent-400">Do they speak ಕನ್ನಡ, हिन्दी, తెలుగు and தமிழ்?</span>
-        </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-400">
-          Attack LLM and voice apps with native, romanized and code-mixed prompts. Find what leaks, prove it with
-          evidence, and verify every fix with regression runs.
-        </p>
-        <div className="mt-5 flex gap-3">
+      <PageHeader
+        title="Dashboard"
+        description="Every attack across your campaigns, by language, severity and attack type. Regression reruns and voice replays are not double counted."
+        actions={
           <LinkButton to="/campaigns/new" variant="primary">
             New campaign
           </LinkButton>
-          <LinkButton to="/voice">Try the Voice Lab</LinkButton>
-        </div>
-      </section>
+        }
+      />
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatTile label="Tests executed" value={b.total_tests} hint={`${data.total_campaigns} campaigns`} />

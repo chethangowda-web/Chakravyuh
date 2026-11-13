@@ -1,4 +1,4 @@
-import { AlertTriangle, Brain, Library, Rocket } from 'lucide-react'
+import { AlertTriangle, Brain, Library, Rocket, ShieldCheck } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 
@@ -33,7 +33,7 @@ const MODES: ReadonlyArray<{ value: AttackMode; title: string; icon: typeof Brai
     value: 'static',
     title: 'Attack library',
     icon: Library,
-    text: '20 curated attacks, each localized by Sarvam Translate into native, romanized and code-mixed forms. Broad and repeatable.',
+    text: '25 curated attacks in 6 categories, each localized by Sarvam Translate into native, romanized and code-mixed forms. Broad and repeatable.',
   },
 ]
 
@@ -54,8 +54,11 @@ export function NewCampaignPage() {
   const [useJudge, setUseJudge] = useState(true)
 
   const adaptive = mode === 'adaptive'
-  const items = targets.data?.items ?? []
+  // Bare targets first, so the default is never a Shield-protected copy (those block most attacks by design).
+  const all = targets.data?.items ?? []
+  const items = [...all.filter((t) => t.shield_for_target_id === null), ...all.filter((t) => t.shield_for_target_id !== null)]
   const target = items.find((t) => String(t.id) === targetChoice) ?? items.find((t) => t.verification_status === 'verified') ?? items[0]
+  const shielded = target !== undefined && target.shield_for_target_id !== null
   const config: CampaignConfig = {
     mode,
     max_turns: maxTurns,
@@ -143,7 +146,7 @@ export function NewCampaignPage() {
                   <Select id="target" value={String(target?.id ?? '')} onChange={(e) => setTargetChoice(e.target.value)}>
                     {items.map((t) => (
                       <option key={t.id} value={t.id}>
-                        {t.name}{t.verification_status === 'verified' ? '' : ' (unverified)'}
+                        {t.name}{t.shield_for_target_id !== null ? ' (behind Shield)' : ''}{t.verification_status === 'verified' ? '' : ' (unverified)'}
                       </option>
                     ))}
                   </Select>
@@ -152,6 +155,13 @@ export function NewCampaignPage() {
                   <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Baseline multilingual scan" />
                 </Field>
               </div>
+              {shielded && (
+                <p className="mt-3 flex items-center gap-2 rounded-md border border-accent-500/30 bg-accent-500/5 px-3 py-2 text-xs text-accent-200">
+                  <ShieldCheck className="size-4 shrink-0" aria-hidden />
+                  This target is behind Chakravyuh Shield, so most attacks are expected to be blocked (safe). To find vulnerabilities,
+                  attack the bare bot; to measure Shield, run the same settings against both and compare on the Shield page.
+                </p>
+              )}
               {unverified && (
                 <p className="mt-3 flex items-center gap-2 rounded-md border border-amber-400/30 bg-amber-400/5 px-3 py-2 text-xs text-amber-200">
                   <AlertTriangle className="size-4 shrink-0" aria-hidden />

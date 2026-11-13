@@ -1976,6 +1976,48 @@
         }
       }
     },
+    "/api/v1/dashboard/journey": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Get Journey",
+        "description": "The guided Test → Fix → Protect flow: which steps are done and where to go next.",
+        "operationId": "getJourney",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Journey"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/shield/{target_id}/chat": {
       "post": {
         "tags": [
@@ -2181,6 +2223,165 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/FalseBlockResult"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manual/match": {
+      "get": {
+        "tags": [
+          "manual"
+        ],
+        "summary": "Match",
+        "description": "Find the verified target whose origin matches the page the extension is open on.",
+        "operationId": "matchManualTarget",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "title": "Url"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManualMatchOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manual/attack": {
+      "post": {
+        "tags": [
+          "manual"
+        ],
+        "summary": "Prepare Attack",
+        "description": "Prepare one attack (translated, with a fresh hidden code) for the person to send in their own chat.",
+        "operationId": "prepareManualAttack",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualAttackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManualAttackOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manual/check": {
+      "post": {
+        "tags": [
+          "manual"
+        ],
+        "summary": "Check Reply",
+        "description": "Score the bot's reply with the same detectors as campaigns and save it as a finding.",
+        "operationId": "checkManualReply",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualCheckRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManualCheckOut"
                 }
               }
             }
@@ -3973,6 +4174,68 @@
         ],
         "title": "HttpMethod"
       },
+      "Journey": {
+        "properties": {
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/JourneyStep"
+            },
+            "type": "array",
+            "title": "Steps"
+          },
+          "next_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Key",
+            "description": "The first step that is not done yet; null when all are done"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "steps",
+          "next_key"
+        ],
+        "title": "Journey"
+      },
+      "JourneyStep": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key",
+            "description": "target | attack | fix | protect"
+          },
+          "done": {
+            "type": "boolean",
+            "title": "Done"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail",
+            "description": "One plain-language line about this step's state"
+          },
+          "link": {
+            "type": "string",
+            "title": "Link",
+            "description": "Where in the app to do (or see) this step"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "key",
+          "done",
+          "detail",
+          "link"
+        ],
+        "title": "JourneyStep"
+      },
       "LanguageCode": {
         "type": "string",
         "enum": [
@@ -4145,6 +4408,310 @@
         ],
         "title": "LiveEvent",
         "description": "One attack in the live feed: written (and translated), then answered and judged."
+      },
+      "ManualAttackOut": {
+        "properties": {
+          "target_id": {
+            "type": "integer",
+            "title": "Target Id"
+          },
+          "template_id": {
+            "type": "string",
+            "title": "Template Id"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "technique": {
+            "type": "string",
+            "title": "Technique"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/ScriptVariant"
+          },
+          "attack_text": {
+            "type": "string",
+            "title": "Attack Text"
+          },
+          "english_gloss": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "English Gloss"
+          },
+          "marker_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marker Token",
+            "description": "Random code hidden in the attack; if the reply repeats it, the bot obeyed"
+          },
+          "detected_language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detected Language"
+          },
+          "detected_script": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detected Script"
+          },
+          "mutation_chain": {
+            "items": {
+              "$ref": "#/components/schemas/Mutation"
+            },
+            "type": "array",
+            "title": "Mutation Chain"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "target_id",
+          "template_id",
+          "category",
+          "technique",
+          "language",
+          "variant",
+          "attack_text",
+          "english_gloss",
+          "marker_token",
+          "detected_language",
+          "detected_script",
+          "mutation_chain"
+        ],
+        "title": "ManualAttackOut"
+      },
+      "ManualAttackRequest": {
+        "properties": {
+          "target_id": {
+            "type": "integer",
+            "title": "Target Id"
+          },
+          "template_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Template Id"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/ScriptVariant",
+            "default": "native"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "target_id",
+          "template_id",
+          "language"
+        ],
+        "title": "ManualAttackRequest"
+      },
+      "ManualCheckOut": {
+        "properties": {
+          "result_id": {
+            "type": "integer",
+            "title": "Result Id",
+            "description": "Open /findings/{result_id} in Chakravyuh for the full evidence"
+          },
+          "campaign_id": {
+            "type": "integer",
+            "title": "Campaign Id"
+          },
+          "verdict": {
+            "$ref": "#/components/schemas/Verdict"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Confidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "severity": {
+            "$ref": "#/components/schemas/Severity"
+          },
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence",
+            "description": "What each detector that fired found"
+          },
+          "judge_rationale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Judge Rationale"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_id",
+          "campaign_id",
+          "verdict",
+          "confidence",
+          "severity",
+          "evidence",
+          "judge_rationale"
+        ],
+        "title": "ManualCheckOut"
+      },
+      "ManualCheckRequest": {
+        "properties": {
+          "target_id": {
+            "type": "integer",
+            "title": "Target Id"
+          },
+          "template_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Template Id"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/ScriptVariant"
+          },
+          "attack_text": {
+            "type": "string",
+            "maxLength": 8000,
+            "minLength": 1,
+            "title": "Attack Text"
+          },
+          "english_gloss": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 8000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "English Gloss"
+          },
+          "marker_token": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 20
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marker Token"
+          },
+          "mutation_chain": {
+            "items": {
+              "$ref": "#/components/schemas/Mutation"
+            },
+            "type": "array",
+            "title": "Mutation Chain"
+          },
+          "reply": {
+            "type": "string",
+            "maxLength": 20000,
+            "minLength": 1,
+            "title": "Reply",
+            "description": "The bot's reply, as selected on the page"
+          },
+          "use_judge": {
+            "type": "boolean",
+            "title": "Use Judge",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "target_id",
+          "template_id",
+          "language",
+          "variant",
+          "attack_text",
+          "reply"
+        ],
+        "title": "ManualCheckRequest"
+      },
+      "ManualMatchOut": {
+        "properties": {
+          "origin": {
+            "type": "string",
+            "title": "Origin"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TargetOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason",
+            "description": "Why no target matched, in plain words"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "origin",
+          "target",
+          "reason"
+        ],
+        "title": "ManualMatchOut",
+        "description": "Which verified target (if any) lives on the page the extension is open on."
       },
       "MaskedHeader": {
         "properties": {

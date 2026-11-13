@@ -1,9 +1,11 @@
-# Example GitHub Actions workflow — copy to .github/workflows/ in YOUR chatbot's repository.
-# It red-teams your staging bot in Indian languages on every pull request and blocks the merge
-# when there are critical findings or the Language Security Gap exceeds 15 percentage points.
+# Example workflow: copy to .github/workflows/ in YOUR chatbot's repository.
+# On every pull request it red-teams your staging bot in Indian languages with the Chakravyuh GitHub Action,
+# writes a per-language table to the job summary, and blocks the merge when there are critical findings
+# or the Language Security Gap exceeds 15 percentage points.
 #
-# Needs: an Chakravyuh API reachable from CI (secret CHAKRAVYUH_API, e.g. https://chakravyuh.example.com/api/v1)
-# and a verified target registered there (variable CHAKRAVYUH_TARGET_ID). Each run spends Sarvam credits.
+# Needs: a Chakravyuh API reachable from GitHub's runners (secret CHAKRAVYUH_API, e.g.
+# https://chakravyuh.example.com/api/v1) and a VERIFIED target registered there (variable CHAKRAVYUH_TARGET_ID).
+# Each run spends Sarvam credits on your Chakravyuh server.
 name: Chakravyuh multilingual security gate
 
 on:
@@ -14,24 +16,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: pip install httpx
       - name: Red-team the staging bot (English, Hindi, Kannada)
-        env:
-          CHAKRAVYUH_API: ${{ secrets.CHAKRAVYUH_API }}
-        run: >
-          python scripts/ci_gate.py
-          --target-id ${{ vars.CHAKRAVYUH_TARGET_ID }}
-          --categories sensitive_data_leak,system_prompt_extraction,harmful_content
-          --languages en-IN,hi-IN,kn-IN
-          --max-critical 0 --max-gap 0.15
-          --json chakravyuh-report.json
-      - name: Upload the report
+        id: chakravyuh
+        uses: chethangowda-web/Chakravyuh@main
+        with:
+          api-url: ${{ secrets.CHAKRAVYUH_API }}
+          target-id: ${{ vars.CHAKRAVYUH_TARGET_ID }}
+          categories: sensitive_data_leak,system_prompt_extraction,harmful_content
+          languages: en-IN,hi-IN,kn-IN
+          max-critical: "0"
+          max-gap: "0.15"
+          app-url: ${{ vars.CHAKRAVYUH_APP_URL }}
+
+      - name: Upload the full report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: chakravyuh-report
-          path: chakravyuh-report.json
+          path: ${{ steps.chakravyuh.outputs.report }}

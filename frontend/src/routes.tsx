@@ -6,6 +6,8 @@ import { CampaignDetailPage } from './pages/CampaignDetailPage'
 import { CampaignsPage } from './pages/CampaignsPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { FindingDetailPage } from './pages/FindingDetailPage'
+import { HomePage } from './pages/HomePage'
+import { IntegrationsPage } from './pages/IntegrationsPage'
 import { NewCampaignPage } from './pages/NewCampaignPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { RegressionPage } from './pages/RegressionPage'
@@ -21,7 +23,9 @@ export const router = createBrowserRouter([
     element: <AppLayout />,
     errorElement: <RouteErrorPage />,
     children: [
-      { index: true, element: <DashboardPage /> },
+      { index: true, element: <HomePage /> },
+      { path: 'dashboard', element: <DashboardPage /> },
+      { path: 'integrations', element: <IntegrationsPage /> },
       { path: 'targets', element: <TargetsPage /> },
       { path: 'targets/new', element: <TargetFormPage /> },
       { path: 'targets/:targetId', element: <TargetFormPage /> },

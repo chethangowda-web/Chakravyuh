@@ -116,6 +116,17 @@ def test_ci_gate_blocks_on_gap_and_critical_and_passes_otherwise() -> None:
     assert not gate.evaluate(critical, max_critical=0, max_gap=None, max_rate=None)["passed"]
 
 
+def test_ci_gate_markdown_summary_for_the_github_action() -> None:
+    gate = _load_gate()
+    report = {**gate.evaluate(BREAKDOWN, max_critical=0, max_gap=0.15, max_rate=None), "campaign_id": 7}
+    md = gate.markdown_summary(report, "https://app.example/")
+    assert "BLOCKED" in md and "campaign #7" in md
+    assert "| Kannada | 45% ← worst |" in md and "| English | 20% |" in md
+    assert "https://app.example/campaigns/7" in md
+    passed = {**gate.evaluate(BREAKDOWN, max_critical=0, max_gap=0.30, max_rate=None), "campaign_id": 8}
+    assert "PASSED" in gate.markdown_summary(passed) and "Why it was blocked" not in gate.markdown_summary(passed)
+
+
 def test_target_legit_questions_round_trip_and_fallback() -> None:
     from fastapi.testclient import TestClient
 

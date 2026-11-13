@@ -21,6 +21,9 @@ Built for *Build with Sarvam* (Vertex Club × Sarvam AI) · Security and Develop
 | **How findings were confirmed** | Dashboard and report show the split between deterministic proof and the model judge (e.g. **80% proven by rules, 20% by the judge**), answering the "AI grading itself" objection with a number. |
 | **CI gate** | `scripts/ci_gate.py` (needs only `httpx`) runs or reads a campaign and exits non-zero when critical findings or the **Language Security Gap** cross a threshold, with a JSON report. Example GitHub Actions workflow: [docs/ci/chakravyuh-gate.yml](docs/ci/chakravyuh-gate.yml). |
 | **Chakravyuh Shield (runtime guard)** | A proxy in front of any verified bot: **Sarvam language ID** + **Sarvam Translate** read every message in English whatever the language or script, fast rules and a **Sarvam-105B** classifier block attacks before they reach the bot, and the red team's own detectors block or redact secrets, a recited system prompt and Indian PII in replies (also when the bot writes them in Indian script). *Protect with Shield* registers `<bot> + Shield` as a target so the **same campaign** proves the effect. In our run on Sahayak Seva (80 attacks, identical settings): **56% → 5%** attack success (Kannada 69% → 13%, Tamil 63% → 0%), and **30/30** legitimate questions in English, Hindi and Kannada still got through. Adds about 3–6 s per message (Sarvam calls). |
+| **Browser extension** | `browser-extension/` (Chrome/Edge, load unpacked): on **your own** bot's web page it checks the site is a verified target, prepares an attack in any Indian language and style (Sarvam Translate, hidden code), inserts it into the page's chat box for you to send, then checks the reply you select with the same detectors and saves it as a finding. It never sends messages to a bot by itself. The demo bots have a chat page at `/chat-ui` to try it. |
+| **GitHub Action** | `uses: chethangowda-web/Chakravyuh@main` ([action.yml](action.yml)) runs or gates a campaign on every pull request, fails the build on critical leaks or a large Language Security Gap, and writes a per-language table to the job summary. Example: [docs/ci/chakravyuh-gate.yml](docs/ci/chakravyuh-gate.yml). |
+| **Guided home** | The first screen explains the product and tracks your progress through **Test → Fix → Protect** (computed from your data); a compact progress bar in the top bar shows the next step on every page. |
 | **Attack library** | 25 hand-written seeds across prompt injection, jailbreak, instruction override, system-prompt extraction, data leakage and harmful content → localized by **Sarvam Translate** into native / romanized / code-mixed forms, each verified by **Sarvam language ID**. |
 | **Voice red team** | Attack audio from **Sarvam TTS** (or upload / mic) → **Sarvam STT** → your LLM. Reports transcript drift. |
 | **Detection** | Deterministic first: planted-secret canaries, injected-code markers, Indian PII regexes (PAN, Aadhaar, mobile, accounts), system-prompt overlap, multilingual refusals. **Sarvam-105B** judges only what those can't decide, and must quote evidence that's really in the reply. |
@@ -102,7 +105,7 @@ Stop the backend before `restore`. Browsing restored data needs no network.
 Before every merge:
 
 ```powershell
-cd backend;  .venv\Scripts\python -m pytest          # 86 tests, no network, no credits
+cd backend;  .venv\Scripts\python -m pytest          # 91 tests, no network, no credits
 cd frontend; npm run verify                           # contract check + typecheck + lint
 ```
 

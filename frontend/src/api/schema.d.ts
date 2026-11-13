@@ -542,6 +542,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/dashboard/journey": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Journey
+         * @description The guided Test → Fix → Protect flow: which steps are done and where to go next.
+         */
+        get: operations["getJourney"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/shield/{target_id}/chat": {
         parameters: {
             query?: never;
@@ -616,6 +636,66 @@ export interface paths {
          * @description Run the target's legitimate questions through Shield's input check: are real users let through?
          */
         post: operations["runFalseBlockCheck"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/manual/match": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Match
+         * @description Find the verified target whose origin matches the page the extension is open on.
+         */
+        get: operations["matchManualTarget"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/manual/attack": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Prepare Attack
+         * @description Prepare one attack (translated, with a fresh hidden code) for the person to send in their own chat.
+         */
+        post: operations["prepareManualAttack"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/manual/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check Reply
+         * @description Score the bot's reply with the same detectors as campaigns and save it as a finding.
+         */
+        post: operations["checkManualReply"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1259,6 +1339,36 @@ export interface components {
          * @enum {string}
          */
         HttpMethod: "POST" | "PUT";
+        /** Journey */
+        Journey: {
+            /** Steps */
+            steps: components["schemas"]["JourneyStep"][];
+            /**
+             * Next Key
+             * @description The first step that is not done yet; null when all are done
+             */
+            next_key: string | null;
+        };
+        /** JourneyStep */
+        JourneyStep: {
+            /**
+             * Key
+             * @description target | attack | fix | protect
+             */
+            key: string;
+            /** Done */
+            done: boolean;
+            /**
+             * Detail
+             * @description One plain-language line about this step's state
+             */
+            detail: string;
+            /**
+             * Link
+             * @description Where in the app to do (or see) this step
+             */
+            link: string;
+        };
         /**
          * LanguageCode
          * @enum {string}
@@ -1312,6 +1422,104 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
+        };
+        /** ManualAttackOut */
+        ManualAttackOut: {
+            /** Target Id */
+            target_id: number;
+            /** Template Id */
+            template_id: string;
+            category: components["schemas"]["AttackCategory"];
+            /** Technique */
+            technique: string;
+            language: components["schemas"]["LanguageCode"];
+            variant: components["schemas"]["ScriptVariant"];
+            /** Attack Text */
+            attack_text: string;
+            /** English Gloss */
+            english_gloss: string | null;
+            /**
+             * Marker Token
+             * @description Random code hidden in the attack; if the reply repeats it, the bot obeyed
+             */
+            marker_token: string | null;
+            /** Detected Language */
+            detected_language: string | null;
+            /** Detected Script */
+            detected_script: string | null;
+            /** Mutation Chain */
+            mutation_chain: components["schemas"]["Mutation"][];
+        };
+        /** ManualAttackRequest */
+        ManualAttackRequest: {
+            /** Target Id */
+            target_id: number;
+            /** Template Id */
+            template_id: string;
+            language: components["schemas"]["LanguageCode"];
+            /** @default native */
+            variant: components["schemas"]["ScriptVariant"];
+        };
+        /** ManualCheckOut */
+        ManualCheckOut: {
+            /**
+             * Result Id
+             * @description Open /findings/{result_id} in Chakravyuh for the full evidence
+             */
+            result_id: number;
+            /** Campaign Id */
+            campaign_id: number;
+            verdict: components["schemas"]["Verdict"];
+            confidence: components["schemas"]["Confidence"] | null;
+            severity: components["schemas"]["Severity"];
+            /**
+             * Evidence
+             * @description What each detector that fired found
+             */
+            evidence: string[];
+            /** Judge Rationale */
+            judge_rationale: string | null;
+        };
+        /** ManualCheckRequest */
+        ManualCheckRequest: {
+            /** Target Id */
+            target_id: number;
+            /** Template Id */
+            template_id: string;
+            language: components["schemas"]["LanguageCode"];
+            variant: components["schemas"]["ScriptVariant"];
+            /** Attack Text */
+            attack_text: string;
+            /** English Gloss */
+            english_gloss?: string | null;
+            /** Marker Token */
+            marker_token?: string | null;
+            /** Mutation Chain */
+            mutation_chain?: components["schemas"]["Mutation"][];
+            /**
+             * Reply
+             * @description The bot's reply, as selected on the page
+             */
+            reply: string;
+            /**
+             * Use Judge
+             * @default true
+             */
+            use_judge: boolean;
+        };
+        /**
+         * ManualMatchOut
+         * @description Which verified target (if any) lives on the page the extension is open on.
+         */
+        ManualMatchOut: {
+            /** Origin */
+            origin: string;
+            target: components["schemas"]["TargetOut"] | null;
+            /**
+             * Reason
+             * @description Why no target matched, in plain words
+             */
+            reason: string | null;
         };
         /** MaskedHeader */
         MaskedHeader: {
@@ -3627,6 +3835,44 @@ export interface operations {
             };
         };
     };
+    getJourney: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Journey"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     shieldChat: {
         parameters: {
             query?: never;
@@ -3773,6 +4019,130 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FalseBlockResult"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    matchManualTarget: {
+        parameters: {
+            query: {
+                url: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ManualMatchOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    prepareManualAttack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ManualAttackRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ManualAttackOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    checkManualReply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ManualCheckRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ManualCheckOut"];
                 };
             };
             /** @description Client error */

@@ -57,6 +57,11 @@ def _origin(url: str) -> tuple[str, str, int | None]:
     return parts.scheme.lower(), (parts.hostname or "").lower(), port or default
 
 
+def origin_of(url: str) -> tuple[str, str, int | None]:
+    """(scheme, host, port) with default ports filled in, for comparing origins."""
+    return _origin(url)
+
+
 def require_same_origin(base_url: str, webhook_url: str | None) -> None:
     """The fix webhook must live on the verified target's own origin.
 

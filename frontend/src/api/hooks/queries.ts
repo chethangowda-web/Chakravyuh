@@ -82,6 +82,11 @@ export function useCampaignLive(campaignId: number, active: boolean, statusTag: 
   return useApiQuery(`live:${campaignId}:${statusTag}`, fetcher, { intervalMs: active ? ACTIVE_POLL_MS : undefined })
 }
 
+/** The guided Test → Fix → Protect progress; refreshes every 10 s. */
+export function useJourney() {
+  return useApiQuery('journey', endpoints.getJourney, { intervalMs: 10_000 })
+}
+
 /** Shield overview for a protected target; refreshes every 5 s so new decisions and campaign results appear. */
 export function useShieldOverview(targetId: number | null, refreshTag: number) {
   const fetcher = useCallback(

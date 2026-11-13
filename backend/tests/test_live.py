@@ -66,3 +66,12 @@ def test_live_counts_stages_and_feed() -> None:
             s.add(camp)
             s.commit()
         assert c.get(f"/api/v1/campaigns/{cid}/live").json()["in_flight"] == 0
+
+
+def test_journey_reports_steps_in_order() -> None:
+    with TestClient(app) as c:
+        j = c.get("/api/v1/dashboard/journey").json()
+        assert [s["key"] for s in j["steps"]] == ["target", "attack", "fix", "protect"]
+        assert all(s["link"].startswith("/") for s in j["steps"])
+        first_open = next((s["key"] for s in j["steps"] if not s["done"]), None)
+        assert j["next_key"] == first_open

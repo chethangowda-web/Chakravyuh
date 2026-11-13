@@ -41,7 +41,9 @@ export function VoiceLabPage() {
   const upload = useAction(endpoints.uploadVoice)
   const test = useAction(endpoints.runVoiceTest)
 
-  const verified = (targets.data?.items ?? []).filter((t) => t.verification_status === 'verified')
+  const allVerified = (targets.data?.items ?? []).filter((t) => t.verification_status === 'verified')
+  // bare bots first, so the default is never a Shield-protected copy
+  const verified = [...allVerified.filter((t) => t.shield_for_target_id === null), ...allVerified.filter((t) => t.shield_for_target_id !== null)]
   const target = verified.find((t) => String(t.id) === targetChoice) ?? verified[0]
   const seeds = (templates.data?.items ?? []).filter((t) => !t.marker_required)
   const selectedSeed = seeds.find((s) => s.id === seedId) ?? seeds[0]
@@ -111,7 +113,7 @@ export function VoiceLabPage() {
             {verified.length > 0 && (
               <Select aria-label="Target" value={String(target?.id ?? '')} onChange={(e) => setTargetChoice(e.target.value)}>
                 {verified.map((t) => (
-                  <option key={t.id} value={t.id}>{t.name}</option>
+                  <option key={t.id} value={t.id}>{t.name}{t.shield_for_target_id !== null ? ' (behind Shield)' : ''}</option>
                 ))}
               </Select>
             )}

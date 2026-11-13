@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Chakravyuh</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <img src="icons/icon32.png" alt="" width="22" height="22" />
+      <span class="brand">Chakra<span class="accent">vyuh</span></span>
+      <button id="settings-toggle" class="icon-btn" title="Settings" aria-label="Settings">⚙</button>
+    </header>
+
+    <section id="settings" hidden>
+      <label>Chakravyuh API <input id="api-base" placeholder="http://127.0.0.1:8010" /></label>
+      <label>Chakravyuh app <input id="app-base" placeholder="http://localhost:5173" /></label>
+      <button id="save-settings" class="btn small">Save</button>
+      <p class="hint">Use your own Chakravyuh server. Nothing is sent anywhere else.</p>
+    </section>
+
+    <section id="site" class="card">
+      <p class="label">This site</p>
+      <p id="site-origin" class="mono">…</p>
+      <p id="site-status" class="status">Checking…</p>
+    </section>
+
+    <section id="steps" hidden>
+      <div class="card">
+        <p class="step"><span>1</span> Prepare an attack</p>
+        <label>Goal <select id="category"></select></label>
+        <label>Attack <select id="template"></select></label>
+        <div class="row">
+          <label>Language <select id="language"></select></label>
+          <label>Style <select id="variant"></select></label>
+        </div>
+        <button id="prepare" class="btn primary">Prepare attack (Sarvam Translate)</button>
+      </div>
+
+      <div id="attack-card" class="card" hidden>
+        <p class="step"><span>2</span> Send it in this site's chat</p>
+        <textarea id="attack-text" rows="4" readonly></textarea>
+        <p id="attack-gloss" class="hint"></p>
+        <div class="row">
+          <button id="insert" class="btn primary">Insert into chat box</button>
+          <button id="copy" class="btn">Copy</button>
+        </div>
+        <p class="hint">Click into the chat box first, then Insert. You press send yourself.</p>
+      </div>
+
+      <div id="check-card" class="card" hidden>
+        <p class="step"><span>3</span> Check the bot's reply</p>
+        <p class="hint">Select the bot's reply on the page with your mouse, then:</p>
+        <button id="check" class="btn primary">Check selected reply</button>
+        <div id="verdict" hidden></div>
+      </div>
+    </section>
+
+    <p id="error" class="error" hidden></p>
+    <footer>Verified targets only · results are saved in Chakravyuh</footer>
+    <script src="popup.js"></script>
+  </body>
+</html>

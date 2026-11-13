@@ -23,6 +23,9 @@ powershell -ExecutionPolicy Bypass -File scripts\dev.ps1     # backend, demo tar
 5. **Voice backup tabs** (open them before going on stage): http://localhost:5173/findings/421 (Kannada voice attack → mobile number and PAN leaked, Critical) and http://localhost:5173/findings/423 (the same in Hindi). Their audio plays offline. A live voice attack can be refused, since Sarvam varies; if it is, say "this time it held — here is one that didn't" and switch tabs.
 6. Offline venue? Everything on screen reads from the local database. Only *new* attacks, TTS/STT and fixes need Sarvam.
 
+## What changed after mentoring (say it at the checkpoint)
+The mentor asked for better UI/UX and an extension or plugin. We added: a **Home page** with a guided **Test → Fix → Protect** journey and a progress bar on every page; a **Chrome/Edge extension** that tests your own bot's web page in any Indian language (try it on http://127.0.0.1:8101/chat-ui); and a **GitHub Action** that blocks a pull request when the bot leaks or is weaker in an Indian language (Integrations page). On the Action, show the job-summary table: the bare Sahayak campaign is **BLOCKED**, the Shield campaign **PASSES**.
+
 ## The pitch
 
 **0:00 — Problem (20 s)**

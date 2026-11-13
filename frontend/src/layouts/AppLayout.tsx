@@ -1,8 +1,9 @@
-import { Crosshair, FlaskConical, LayoutDashboard, Mic, Plus, Radar, ShieldCheck } from 'lucide-react'
+import { Crosshair, FlaskConical, House, LayoutDashboard, Mic, Plug, Plus, Radar, ShieldCheck } from 'lucide-react'
 import type { ComponentType, SVGProps } from 'react'
 import { Link, NavLink, Outlet } from 'react-router'
 
 import { BackendStatus } from '../components/domain/BackendStatus'
+import { JourneyBar } from '../components/domain/JourneyBar'
 import { cn } from '../lib/cn'
 
 interface NavItem {
@@ -13,17 +14,24 @@ interface NavItem {
 }
 
 const NAV_SECTIONS: ReadonlyArray<{ title: string; items: readonly NavItem[] }> = [
-  { title: 'Overview', items: [{ to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true }] },
   {
-    title: 'Red team',
+    title: 'Overview',
+    items: [
+      { to: '/', label: 'Home', icon: House, end: true },
+      { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    ],
+  },
+  {
+    title: '1 · Test & fix',
     items: [
       { to: '/targets', label: 'Targets', icon: Crosshair },
       { to: '/studio', label: 'Attack Studio', icon: FlaskConical },
       { to: '/campaigns', label: 'Campaigns', icon: Radar },
       { to: '/voice', label: 'Voice Lab', icon: Mic },
-      { to: '/shield', label: 'Shield', icon: ShieldCheck },
     ],
   },
+  { title: '2 · Protect', items: [{ to: '/shield', label: 'Shield', icon: ShieldCheck }] },
+  { title: 'Integrations', items: [{ to: '/integrations', label: 'Extension & CI', icon: Plug }] },
 ]
 
 function Sidebar() {
@@ -76,7 +84,9 @@ function Sidebar() {
 
 function Topbar() {
   return (
-    <header className="no-print sticky top-0 z-10 flex h-14 items-center justify-end gap-3 border-b border-zinc-800/80 bg-zinc-950/80 px-8 backdrop-blur">
+    <header className="no-print sticky top-0 z-10 flex h-14 items-center gap-3 border-b border-zinc-800/80 bg-zinc-950/80 px-8 backdrop-blur">
+      <JourneyBar />
+      <div className="flex-1" />
       <BackendStatus />
       <Link
         to="/campaigns/new"

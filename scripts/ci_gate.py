@@ -72,6 +72,37 @@ def evaluate(breakdown: dict[str, Any], *, max_critical: int, max_gap: float | N
     }
 
 
+LANGUAGE_NAMES = {"en-IN": "English", "hi-IN": "Hindi", "kn-IN": "Kannada", "te-IN": "Telugu", "ta-IN": "Tamil"}
+
+
+def markdown_summary(report: dict[str, Any], app_url: str | None = None) -> str:
+    """A short Markdown report, e.g. for the GitHub Actions job summary."""
+    m = report["metrics"]
+    verdict = "✅ **PASSED**" if report["passed"] else "❌ **BLOCKED**"
+    lines = [
+        "## Chakravyuh multilingual security gate",
+        "",
+        f"{verdict} · campaign #{report['campaign_id']} · {m['vulnerabilities']}/{m['tests']} attacks succeeded "
+        f"({m['attack_success_rate']:.0%}) · {m['critical']} critical",
+        "",
+    ]
+    if report["violations"]:
+        lines += ["**Why it was blocked**", ""] + [f"- {v}" for v in report["violations"]] + [""]
+    lines += ["| Language | Attack success |", "|---|---|"]
+    for code, rate in m["by_language"].items():
+        mark = " ← worst" if code == m.get("worst_language") else ""
+        lines.append(f"| {LANGUAGE_NAMES.get(code, code)} | {rate:.0%}{mark} |")
+    gap = f"{m['language_gap']:.0%}" if m["language_gap"] is not None else "n/a"
+    t = report["thresholds"]
+    lines += ["", f"Language Security Gap: **{gap}** (worst language vs English). "
+              f"Thresholds: critical ≤ {t['max_critical']}"
+              + (f", gap ≤ {t['max_gap']:.0%}" if t["max_gap"] is not None else "")
+              + (f", success rate ≤ {t['max_rate']:.0%}" if t["max_rate"] is not None else "") + "."]
+    if app_url:
+        lines += ["", f"[Open the findings in Chakravyuh]({app_url.rstrip('/')}/campaigns/{report['campaign_id']})"]
+    return "\n".join(lines) + "\n"
+
+
 def _run_campaign(client: httpx.Client, args: argparse.Namespace) -> int:
     config = {
         "mode": args.mode, "max_turns": args.max_turns, "use_judge": True,
@@ -111,6 +142,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-rate", type=float)
     parser.add_argument("--timeout", type=int, default=1800)
     parser.add_argument("--json", dest="json_path", help="write the full report here")
+    parser.add_argument("--summary", dest="summary_path", default=os.environ.get("GITHUB_STEP_SUMMARY"),
+                        help="append a Markdown report here (defaults to $GITHUB_STEP_SUMMARY on GitHub Actions)")
+    parser.add_argument("--app-url", default=os.environ.get("CHAKRAVYUH_APP_URL"),
+                        help="Chakravyuh web app URL, to link the findings from the summary")
     args = parser.parse_args(argv)
     if args.campaign_id is None and args.target_id is None:
         parser.error("give --target-id (run a new campaign) or --campaign-id (gate an existing one)")
@@ -130,6 +165,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.json_path:
         with open(args.json_path, "w", encoding="utf-8") as fh:
             json.dump(report, fh, indent=2, ensure_ascii=False)
+    if args.summary_path:
+        with open(args.summary_path, "a", encoding="utf-8") as fh:
+            fh.write(markdown_summary(report, args.app_url))
+    if os.environ.get("GITHUB_OUTPUT"):  # step outputs for the GitHub Action
+        with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+            fh.write(f"passed={'true' if report['passed'] else 'false'}\ncampaign-id={campaign_id}\n")
     m = report["metrics"]
     gap = f"{m['language_gap']:.0%} ({m['worst_language']})" if m["language_gap"] is not None else "n/a"
     print(f"Chakravyuh gate · campaign {campaign_id}: {m['vulnerabilities']}/{m['tests']} attacks succeeded, "

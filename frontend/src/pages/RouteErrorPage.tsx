@@ -14,7 +14,7 @@ export function RouteErrorPage() {
         <p className="font-mono text-sm text-red-400">Something went wrong</p>
         <h1 className="mt-2 text-xl font-semibold text-zinc-100">{message}</h1>
         <Link to="/" className="mt-4 inline-block text-sm text-zinc-400 hover:text-zinc-200">
-          Back to dashboard
+          Back to home
         </Link>
       </div>
     </div>

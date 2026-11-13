@@ -1,4 +1,4 @@
-import { BadgeCheck, Crosshair, Plus, ShieldQuestion, Trash2 } from 'lucide-react'
+import { BadgeCheck, Crosshair, Plus, ShieldCheck, ShieldQuestion, Trash2 } from 'lucide-react'
 import { Link } from 'react-router'
 
 import { endpoints } from '../api/endpoints'
@@ -17,6 +17,9 @@ export function TargetsPage() {
   const targets = useTargets()
   const toast = useToast()
   const remove = useAction(endpoints.deleteTarget)
+  const all = targets.data?.items ?? []
+  // Real bots first; their Shield-protected copies after, clearly marked.
+  const ordered = [...all.filter((t) => t.shield_for_target_id === null), ...all.filter((t) => t.shield_for_target_id !== null)]
 
   const onDelete = async (id: number, name: string) => {
     if (!window.confirm(`Delete "${name}" and ALL its campaigns and findings?`)) return
@@ -48,8 +51,8 @@ export function TargetsPage() {
         />
       )}
       <div className="grid gap-4 md:grid-cols-2">
-        {targets.data?.items.map((t) => (
-          <Card key={t.id}>
+        {ordered.map((t) => (
+          <Card key={t.id} className={t.shield_for_target_id !== null ? 'border-accent-500/30 bg-accent-500/[0.03]' : undefined}>
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <Link to={`/targets/${t.id}`} className="block truncate text-base font-semibold text-zinc-100 hover:text-accent-300">
@@ -58,6 +61,14 @@ export function TargetsPage() {
                 <p className="mt-1 truncate font-mono text-xs text-zinc-500">
                   {t.method} {t.base_url}
                 </p>
+                {t.shield_for_target_id !== null && (
+                  <p className="mt-2 flex items-center gap-1.5 text-xs text-accent-300">
+                    <ShieldCheck className="size-3.5" aria-hidden /> Behind Chakravyuh Shield: attacks here are expected to be blocked.{' '}
+                    <Link className="underline-offset-2 hover:underline" to={`/shield?target=${t.shield_for_target_id}`}>
+                      Shield page
+                    </Link>
+                  </p>
+                )}
               </div>
               {t.verification_status === 'verified' ? (
                 <Badge tone="success">

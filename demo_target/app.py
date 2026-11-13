@@ -236,6 +236,7 @@ button{padding:8px 14px;border-radius:8px;border:1px solid #334155;background:#1
 button.on{background:#0d9488;border-color:#14b8a6;color:#04201d;font-weight:600}input{padding:8px;border-radius:8px;border:1px solid #334155;background:#0b1220;color:#e5e7eb;width:70%}
 code{background:#0b1220;padding:2px 6px;border-radius:6px}</style></head><body>
 <h1>__EMOJI__ __TITLE__</h1><p>Demo application under test for Chakravyuh. __TAGLINE__</p>
+<p><a href="/chat-ui" style="color:#5eead4">Open the customer chat window →</a></p>
 <div class="card"><h3>Deployed version</h3>
 <button id="v1" onclick="setV('v1')">v1 · vulnerable</button><button id="v2" onclick="setV('v2')">v2 · patched</button>
 <p id="desc"></p></div>
@@ -255,3 +256,39 @@ load()</script></body></html>"""
 def index() -> str:
     return (_PAGE.replace("__TITLE__", PROFILE["title"]).replace("__EMOJI__", PROFILE["emoji"])
             .replace("__TAGLINE__", PROFILE["tagline"]).replace("__V1__", PROFILE["v1"]).replace("__V2__", PROFILE["v2"]))
+
+
+_CHAT_PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__ · chat</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI","Nirmala UI",system-ui,sans-serif;background:#eef2f7;color:#0f172a}
+.top{background:#0f766e;color:#fff;padding:14px 20px;font-weight:600;font-size:18px}
+.top small{display:block;font-weight:400;opacity:.85;font-size:12px}
+.wrap{max-width:720px;margin:18px auto;padding:0 12px}
+#log{background:#fff;border:1px solid #d7dee8;border-radius:14px;padding:14px;height:62vh;overflow:auto}
+.msg{max-width:85%;padding:9px 12px;border-radius:12px;margin:8px 0;white-space:pre-wrap;line-height:1.45}
+.me{margin-left:auto;background:#ccfbf1}.bot{background:#f1f5f9;border:1px solid #e2e8f0}
+form{display:flex;gap:8px;margin-top:10px}textarea{flex:1;padding:10px;border-radius:10px;border:1px solid #cbd5e1;font:inherit;resize:none}
+button{padding:0 18px;border-radius:10px;border:0;background:#0f766e;color:#fff;font-weight:600;cursor:pointer}
+.note{font-size:12px;color:#64748b;margin-top:8px}
+</style></head><body>
+<div class="top">__EMOJI__ __TITLE__<small>Demo chatbot for Chakravyuh testing. __TAGLINE__</small></div>
+<div class="wrap"><div id="log"><div class="msg bot">Namaskara! How can I help you today?</div></div>
+<form id="f"><textarea id="m" rows="2" placeholder="Type your message (any language)…"></textarea><button>Send</button></form>
+<p class="note">Fictional app, deliberately vulnerable in v1. Test it with the Chakravyuh browser extension.</p></div>
+<script>
+const log=document.getElementById('log'),m=document.getElementById('m');
+function add(t,c){const d=document.createElement('div');d.className='msg '+c;d.textContent=t;log.appendChild(d);log.scrollTop=log.scrollHeight;return d}
+document.getElementById('f').addEventListener('submit',async e=>{e.preventDefault();const t=m.value.trim();if(!t)return;
+add(t,'me');m.value='';const w=add('…','bot');
+try{const r=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})});
+const j=await r.json();w.textContent=r.ok?j.reply:('Error: '+(j.detail||r.status))}catch(err){w.textContent='Error: '+err}});
+m.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();document.getElementById('f').requestSubmit()}});
+</script></body></html>"""
+
+
+@app.get("/chat-ui", response_class=HTMLResponse)
+def chat_ui() -> str:
+    """A customer-facing chat window, so the bot can be tested like a real website (e.g. with the extension)."""
+    return (_CHAT_PAGE.replace("__TITLE__", PROFILE["title"]).replace("__EMOJI__", PROFILE["emoji"])
+            .replace("__TAGLINE__", PROFILE["tagline"]))

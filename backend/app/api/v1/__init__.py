@@ -8,6 +8,7 @@ from app.api.v1 import (
     dashboard,
     fixes,
     health,
+    manual,
     meta,
     regression,
     results,
@@ -23,5 +24,5 @@ ERROR_RESPONSES: dict[int | str, dict[str, object]] = {
 }
 
 api_router = APIRouter(prefix="/api/v1", responses=ERROR_RESPONSES)
-for module in (health, meta, targets, attacks, campaigns, fixes, results, voice, regression, dashboard, shield):
+for module in (health, meta, targets, attacks, campaigns, fixes, results, voice, regression, dashboard, shield, manual):
     api_router.include_router(module.router)

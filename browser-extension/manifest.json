@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Chakravyuh – Indic chatbot red team",
+  "short_name": "Chakravyuh",
+  "version": "0.1.0",
+  "description": "Test your own chatbot's web page in Hindi, Kannada, Telugu and Tamil: prepare an attack, send it, and check the reply for leaks. Verified targets only.",
+  "action": {
+    "default_title": "Chakravyuh",
+    "default_popup": "popup.html",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["http://127.0.0.1/*", "http://localhost/*"],
+  "optional_host_permissions": ["https://*/*"]
+}

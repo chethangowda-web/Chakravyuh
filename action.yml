@@ -1,0 +1,114 @@
+name: Chakravyuh multilingual security gate
+description: >-
+  Red-team your chatbot in Hindi, Kannada, Telugu and Tamil with Chakravyuh, and fail the build when it leaks
+  (critical findings) or is much weaker in an Indian language than in English (Language Security Gap).
+author: Chakravyuh
+branding:
+  icon: shield
+  color: green
+
+inputs:
+  api-url:
+    description: "Your Chakravyuh API, e.g. https://chakravyuh.example.com/api/v1 (must be reachable from the runner)"
+    required: true
+  target-id:
+    description: "ID of a VERIFIED target in Chakravyuh (your staging bot). Required unless campaign-id is given."
+    required: false
+    default: ""
+  campaign-id:
+    description: "Gate an existing, finished campaign instead of running a new one (spends no Sarvam credits)"
+    required: false
+    default: ""
+  mode:
+    description: "static (attack library, repeatable) or adaptive (Sarvam-105B attacker)"
+    required: false
+    default: static
+  categories:
+    description: "Comma-separated attack categories"
+    required: false
+    default: sensitive_data_leak,system_prompt_extraction,instruction_override
+  languages:
+    description: "Comma-separated languages (en-IN,hi-IN,kn-IN,te-IN,ta-IN). Keep en-IN to measure the gap."
+    required: false
+    default: en-IN,hi-IN,kn-IN
+  variants:
+    description: "Comma-separated writing styles: native, romanized, code_mixed"
+    required: false
+    default: native,code_mixed
+  max-critical:
+    description: "Fail if there are more critical findings than this"
+    required: false
+    default: "0"
+  max-gap:
+    description: "Fail if the worst language's attack success exceeds English's by more than this (0.15 = 15 points)"
+    required: false
+    default: "0.15"
+  max-rate:
+    description: "Optional: fail if the overall attack-success rate is above this (e.g. 0.2)"
+    required: false
+    default: ""
+  timeout:
+    description: "Seconds to wait for a new campaign to finish"
+    required: false
+    default: "1800"
+  app-url:
+    description: "Optional: your Chakravyuh web app URL, to link the findings from the job summary"
+    required: false
+    default: ""
+
+outputs:
+  passed:
+    description: "true or false"
+    value: ${{ steps.gate.outputs.passed }}
+  campaign-id:
+    description: "The campaign that was gated"
+    value: ${{ steps.gate.outputs.campaign-id }}
+  report:
+    description: "Path to the full JSON report"
+    value: ${{ steps.gate.outputs.report }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Install the gate's only dependency
+      shell: bash
+      run: python -m pip install --quiet "httpx>=0.27"
+    - id: gate
+      name: Run the Chakravyuh gate
+      shell: bash
+      env:
+        CHAKRAVYUH_API: ${{ inputs.api-url }}
+        CHAKRAVYUH_APP_URL: ${{ inputs.app-url }}
+        IN_TARGET: ${{ inputs.target-id }}
+        IN_CAMPAIGN: ${{ inputs.campaign-id }}
+        IN_MODE: ${{ inputs.mode }}
+        IN_CATEGORIES: ${{ inputs.categories }}
+        IN_LANGUAGES: ${{ inputs.languages }}
+        IN_VARIANTS: ${{ inputs.variants }}
+        IN_MAX_CRITICAL: ${{ inputs.max-critical }}
+        IN_MAX_GAP: ${{ inputs.max-gap }}
+        IN_MAX_RATE: ${{ inputs.max-rate }}
+        IN_TIMEOUT: ${{ inputs.timeout }}
+      run: |
+        report="$RUNNER_TEMP/chakravyuh-report.json"
+        args=(--api "$CHAKRAVYUH_API" --mode "$IN_MODE" --categories "$IN_CATEGORIES" --languages "$IN_LANGUAGES"
+              --variants "$IN_VARIANTS" --max-critical "$IN_MAX_CRITICAL" --timeout "$IN_TIMEOUT" --json "$report")
+        if [ -n "$IN_CAMPAIGN" ]; then args+=(--campaign-id "$IN_CAMPAIGN");
+        elif [ -n "$IN_TARGET" ]; then args+=(--target-id "$IN_TARGET");
+        else echo "::error::Set either target-id or campaign-id"; exit 2; fi
+        if [ -n "$IN_MAX_GAP" ]; then args+=(--max-gap "$IN_MAX_GAP"); fi
+        if [ -n "$IN_MAX_RATE" ]; then args+=(--max-rate "$IN_MAX_RATE"); fi
+
+        echo "report=$report" >> "$GITHUB_OUTPUT"
+        # The gate writes passed / campaign-id to $GITHUB_OUTPUT and its report to the job summary itself.
+        set +e
+        python "$GITHUB_ACTION_PATH/scripts/ci_gate.py" "${args[@]}"
+        code=$?
+        set -e
+        if [ "$code" = "2" ]; then echo "passed=false" >> "$GITHUB_OUTPUT"; fi
+        if [ "$code" = "1" ]; then echo "::error::Chakravyuh blocked this change: see the job summary for the findings"; fi
+        if [ "$code" = "2" ]; then echo "::error::Chakravyuh gate could not run (API unreachable or campaign failed)"; fi
+        exit $code
