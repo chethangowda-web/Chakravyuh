@@ -56,7 +56,7 @@ function Comparison({ data }: { data: ShieldOverview }) {
   return (
     <Card
       title="Attack success: without vs with Shield"
-      description="The same attack campaign, run against the bare bot and against the bot behind Shield. Lower is better."
+      description="Your largest like-for-like pair: the same campaign settings run against the bare bot and against the bot behind Shield. Lower is better."
       actions={
         shieldId !== null && (
           <LinkButton size="sm" variant="primary" to={`/campaigns/new?target=${shieldId}`} icon={<Radar className="size-3.5" aria-hidden />}>

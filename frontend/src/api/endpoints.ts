@@ -41,6 +41,13 @@ export const endpoints = {
   listCampaigns: (signal: AbortSignal) => unwrap(api.GET('/api/v1/campaigns', { signal })),
   getCampaign: (campaignId: number, signal: AbortSignal) =>
     unwrap(api.GET('/api/v1/campaigns/{campaign_id}', { params: { path: { campaign_id: campaignId } }, signal })),
+  getFormation: (scope: 'bare' | 'shield', campaignId: number | null, signal: AbortSignal) =>
+    unwrap(
+      api.GET('/api/v1/dashboard/formation', {
+        params: { query: campaignId === null ? { scope } : { scope, campaign_id: campaignId } },
+        signal,
+      }),
+    ),
   getJourney: (signal: AbortSignal) => unwrap(api.GET('/api/v1/dashboard/journey', { signal })),
   getShieldOverview: (targetId: number, signal: AbortSignal) =>
     unwrap(api.GET('/api/v1/shield/{target_id}', { params: { path: { target_id: targetId } }, signal })),

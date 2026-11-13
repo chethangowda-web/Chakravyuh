@@ -14,7 +14,7 @@ jobs:
   redteam:
     runs-on: ubuntu-latest
     steps:
-      - uses: chethangowda-web/Chakravyuh@main
+      - uses: chethangowda-web/Chakravyuh@v1.0.0
         with:
           api-url: \${{ secrets.CHAKRAVYUH_API }}
           target-id: \${{ vars.CHAKRAVYUH_TARGET_ID }}

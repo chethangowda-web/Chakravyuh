@@ -82,6 +82,12 @@ export function useCampaignLive(campaignId: number, active: boolean, statusTag: 
   return useApiQuery(`live:${campaignId}:${statusTag}`, fetcher, { intervalMs: active ? ACTIVE_POLL_MS : undefined })
 }
 
+/** Rings + a replay of real attacks for the Living Chakravyuh visual (fetched once per scope). */
+export function useFormation(scope: 'bare' | 'shield', campaignId: number | null = null) {
+  const fetcher = useCallback((signal: AbortSignal) => endpoints.getFormation(scope, campaignId, signal), [scope, campaignId])
+  return useApiQuery(`formation:${scope}:${campaignId ?? 'all'}`, fetcher)
+}
+
 /** The guided Test → Fix → Protect progress; refreshes every 10 s. */
 export function useJourney() {
   return useApiQuery('journey', endpoints.getJourney, { intervalMs: 10_000 })

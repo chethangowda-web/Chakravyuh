@@ -31,6 +31,8 @@ The mentor asked for better UI/UX and an extension or plugin. We added: a **Home
 **0:00 — Problem (20 s)**
 "Indian companies are shipping chatbots and voice bots in Hindi, Kannada, Telugu and Tamil — but safety testing is done in English. Chakravyuh is an Indic red-teaming lab for LLM and voice apps. It doesn't just replay a list of attacks. It hires an AI attacker, shows you what leaked, and proves the fix."
 
+**Opening visual (Home page, 10 s, optional)**: point at the Living Chakravyuh. "This is our formation, drawn from real results: each ring is a language, and the gaps are the attacks that got through. English has the smallest gaps; Telugu and Tamil the biggest. Red dots reaching the core are real leaks." Click **With Shield**: "Same attacks behind Shield: the formation closes."
+
 **0:20 — Dashboard (20 s)** → `/`
 "Across our runs, attacks got through roughly 4 times in 10 in English — and about 6 in 10 in Telugu and Tamil. Same bot, same rules." *(read the exact percentages off the Language Gap chart; they shift a little with every run)*
 

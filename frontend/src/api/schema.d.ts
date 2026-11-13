@@ -562,6 +562,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/dashboard/formation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Formation
+         * @description Per-language rings and a replay of real attacks for the Living Chakravyuh visual (all campaigns in a
+         *     scope, or one campaign).
+         */
+        get: operations["getFormation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/shield/{target_id}/chat": {
         parameters: {
             query?: never;
@@ -1208,6 +1229,41 @@ export interface components {
              */
             created_at: string;
         };
+        /** Formation */
+        Formation: {
+            /**
+             * Scope
+             * @enum {string}
+             */
+            scope: "bare" | "shield";
+            /** Campaigns */
+            campaigns: number;
+            /**
+             * Rings
+             * @description Per-language attack success, same counting as the dashboard
+             */
+            rings: components["schemas"]["LanguageStat"][];
+            /**
+             * Attacks
+             * @description Most recent real attacks, oldest first, for the replay
+             */
+            attacks: components["schemas"]["FormationAttack"][];
+        };
+        /** FormationAttack */
+        FormationAttack: {
+            /** Result Id */
+            result_id: number;
+            language: components["schemas"]["LanguageCode"];
+            category: components["schemas"]["AttackCategory"];
+            /** Breached */
+            breached: boolean;
+            severity: components["schemas"]["Severity"];
+            /**
+             * Detail
+             * @description Short evidence for a breach, e.g. 'Exposed: Aadhaar'
+             */
+            detail: string | null;
+        };
         /**
          * GeneralizationOut
          * @description Did the patch fix only the attacks it was shown, or also ones it never saw?
@@ -1307,7 +1363,7 @@ export interface components {
         };
         /**
          * HelpfulnessOut
-         * @description Over-refusal check: how many legitimate banking questions the bot still answers.
+         * @description Over-refusal check: how many legitimate questions (the target's own, or a built-in banking set) the bot still answers.
          */
         HelpfulnessOut: {
             /** Id */
@@ -3851,6 +3907,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Journey"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    getFormation: {
+        parameters: {
+            query?: {
+                scope?: "bare" | "shield";
+                campaign_id?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Formation"];
                 };
             };
             /** @description Client error */

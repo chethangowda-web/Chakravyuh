@@ -45,7 +45,11 @@ export function VoiceLabPage() {
   // bare bots first, so the default is never a Shield-protected copy
   const verified = [...allVerified.filter((t) => t.shield_for_target_id === null), ...allVerified.filter((t) => t.shield_for_target_id !== null)]
   const target = verified.find((t) => String(t.id) === targetChoice) ?? verified[0]
-  const seeds = (templates.data?.items ?? []).filter((t) => !t.marker_required)
+  // Spoken attacks can't rely on a hidden code, so only marker-free seeds; show the chosen category's seeds
+  // (falling back to all of them for categories that have none).
+  const voiceSeeds = (templates.data?.items ?? []).filter((t) => !t.marker_required)
+  const inCategory = voiceSeeds.filter((t) => t.category === category)
+  const seeds = inCategory.length > 0 ? inCategory : voiceSeeds
   const selectedSeed = seeds.find((s) => s.id === seedId) ?? seeds[0]
 
   const onLoadSeed = async () => {

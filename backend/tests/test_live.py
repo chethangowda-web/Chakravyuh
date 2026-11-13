@@ -75,3 +75,19 @@ def test_journey_reports_steps_in_order() -> None:
         assert all(s["link"].startswith("/") for s in j["steps"])
         first_open = next((s["key"] for s in j["steps"] if not s["done"]), None)
         assert j["next_key"] == first_open
+
+
+def test_formation_returns_rings_and_replay_for_both_scopes() -> None:
+    with TestClient(app) as c:
+        for scope in ("bare", "shield"):
+            f = c.get("/api/v1/dashboard/formation", params={"scope": scope}).json()
+            assert f["scope"] == scope and isinstance(f["rings"], list) and isinstance(f["attacks"], list)
+            assert len(f["attacks"]) <= 40
+            ids = [a["result_id"] for a in f["attacks"]]
+            assert ids == sorted(ids)  # oldest first, so the replay plays in order
+        assert c.get("/api/v1/dashboard/formation", params={"scope": "everything"}).status_code == 422
+
+
+def test_formation_for_one_campaign_and_unknown_campaign() -> None:
+    with TestClient(app) as c:
+        assert c.get("/api/v1/dashboard/formation", params={"campaign_id": 999999}).status_code == 404

@@ -2,6 +2,7 @@ import { Loader2 } from 'lucide-react'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
 
 import { cn } from '../../lib/cn'
+import { useCountUp } from '../../lib/useCountUp'
 
 export function Spinner({ className }: { className?: string }) {
   return <Loader2 className={cn('size-4 animate-spin text-zinc-500', className)} aria-label="Loading" />
@@ -50,11 +51,25 @@ interface StatTileProps {
   tone?: string | undefined
 }
 
+function accentFor(tone: string | undefined): string {
+  if (tone?.includes('red')) return 'from-red-400/80'
+  if (tone?.includes('emerald')) return 'from-emerald-400/80'
+  if (tone?.includes('amber')) return 'from-amber-300/80'
+  return 'from-accent-400/70'
+}
+
+function CountUp({ value }: { value: number }) {
+  return <>{useCountUp(value).toLocaleString()}</>
+}
+
 export function StatTile({ label, value, hint, tone }: StatTileProps) {
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+    <div className="relative overflow-hidden rounded-xl border border-zinc-800/80 bg-linear-to-b from-zinc-900/80 to-zinc-900/40 p-4 ring-1 ring-inset ring-white/[0.03] transition-colors hover:border-zinc-700/80">
+      <div className={cn('absolute inset-x-0 top-0 h-0.5 bg-linear-to-r to-transparent', accentFor(tone))} aria-hidden />
       <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">{label}</p>
-      <p className={cn('mt-2 text-2xl font-semibold tabular-nums text-zinc-100', tone)}>{value}</p>
+      <p className={cn('mt-2 text-2xl font-semibold tabular-nums text-zinc-100', tone)}>
+        {typeof value === 'number' ? <CountUp value={value} /> : value}
+      </p>
       {hint !== undefined && <p className="mt-0.5 text-xs text-zinc-500">{hint}</p>}
     </div>
   )

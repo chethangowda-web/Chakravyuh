@@ -1,6 +1,6 @@
 import { Crosshair, FlaskConical, House, LayoutDashboard, Mic, Plug, Plus, Radar, ShieldCheck } from 'lucide-react'
 import type { ComponentType, SVGProps } from 'react'
-import { Link, NavLink, Outlet } from 'react-router'
+import { Link, NavLink, Outlet, useLocation } from 'react-router'
 
 import { BackendStatus } from '../components/domain/BackendStatus'
 import { JourneyBar } from '../components/domain/JourneyBar'
@@ -60,7 +60,7 @@ function Sidebar() {
                       cn(
                         'flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors',
                         isActive
-                          ? 'bg-zinc-800/80 font-medium text-zinc-50'
+                          ? 'bg-linear-to-r from-accent-500/15 to-transparent font-medium text-zinc-50 shadow-[inset_2px_0_0_#2dd4bf]'
                           : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200',
                       )
                     }
@@ -99,13 +99,21 @@ function Topbar() {
 }
 
 export function AppLayout() {
+  const { pathname } = useLocation()
   return (
     <div className="flex min-h-screen">
+      <div
+        className="no-print pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgba(20,184,166,0.07),transparent_45%),radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.05),transparent_45%)]"
+        aria-hidden
+      />
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar />
         <main className="mx-auto w-full max-w-7xl flex-1 px-8 py-8">
-          <Outlet />
+          {/* keyed by path: each page fades in on navigation */}
+          <div key={pathname} className="page-enter">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

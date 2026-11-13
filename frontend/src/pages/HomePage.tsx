@@ -2,6 +2,7 @@ import { ArrowRight, Check, FileSearch, Languages, Puzzle, ShieldCheck, Sparkles
 import { Link } from 'react-router'
 
 import { useDashboard, useJourney } from '../api/hooks/queries'
+import { ChakravyuhFormation } from '../components/domain/ChakravyuhFormation'
 import { Badge } from '../components/ui/Badge'
 import { LinkButton } from '../components/ui/Button'
 import { Skeleton } from '../components/ui/Skeleton'
@@ -20,9 +21,10 @@ const STEP_TEXT: Record<string, string> = {
 function Hero({ journey }: { journey: Journey | undefined }) {
   const next = journey?.steps.find((s) => s.key === journey.next_key)
   return (
-    <section className="bg-grid relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/40 px-8 py-10">
+    <section className="bg-grid relative grid items-center gap-8 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/40 px-8 py-8 lg:grid-cols-[1.05fr_1fr]">
       <div className="pointer-events-none absolute -right-24 -top-28 size-80 rounded-full bg-accent-500/15 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 left-1/3 size-72 rounded-full bg-violet-500/10 blur-3xl" />
+      <div className="relative">
       <Badge tone="accent">
         <Sparkles className="size-3.5" aria-hidden /> Indic red-teaming lab · powered by Sarvam AI
       </Badge>
@@ -51,6 +53,14 @@ function Hero({ journey }: { journey: Journey | undefined }) {
           <span className="font-medium text-zinc-300">Test</span> → <span className="font-medium text-zinc-300">Fix</span> →{' '}
           <span className="font-medium text-zinc-300">Protect</span>
         </span>
+      </div>
+      <p className="mt-6 max-w-md text-xs leading-relaxed text-zinc-500">
+        <span className="text-zinc-300">The formation on the right is your real data.</span> Each ring is a language; its gaps
+        are the attacks that got through. Dots replay real attacks: red ones reached the core.
+      </p>
+      </div>
+      <div className="relative">
+        <ChakravyuhFormation />
       </div>
     </section>
   )

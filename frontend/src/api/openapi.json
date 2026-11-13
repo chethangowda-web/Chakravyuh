@@ -2018,6 +2018,80 @@
         }
       }
     },
+    "/api/v1/dashboard/formation": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Get Formation",
+        "description": "Per-language rings and a replay of real attacks for the Living Chakravyuh visual (all campaigns in a\nscope, or one campaign).",
+        "operationId": "getFormation",
+        "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "bare",
+                "shield"
+              ],
+              "type": "string",
+              "default": "bare",
+              "title": "Scope"
+            }
+          },
+          {
+            "name": "campaign_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Campaign Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Formation"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/shield/{target_id}/chat": {
       "post": {
         "tags": [
@@ -3819,6 +3893,91 @@
         ],
         "title": "FixProposalOut"
       },
+      "Formation": {
+        "properties": {
+          "scope": {
+            "type": "string",
+            "enum": [
+              "bare",
+              "shield"
+            ],
+            "title": "Scope"
+          },
+          "campaigns": {
+            "type": "integer",
+            "title": "Campaigns"
+          },
+          "rings": {
+            "items": {
+              "$ref": "#/components/schemas/LanguageStat"
+            },
+            "type": "array",
+            "title": "Rings",
+            "description": "Per-language attack success, same counting as the dashboard"
+          },
+          "attacks": {
+            "items": {
+              "$ref": "#/components/schemas/FormationAttack"
+            },
+            "type": "array",
+            "title": "Attacks",
+            "description": "Most recent real attacks, oldest first, for the replay"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "scope",
+          "campaigns",
+          "rings",
+          "attacks"
+        ],
+        "title": "Formation"
+      },
+      "FormationAttack": {
+        "properties": {
+          "result_id": {
+            "type": "integer",
+            "title": "Result Id"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "category": {
+            "$ref": "#/components/schemas/AttackCategory"
+          },
+          "breached": {
+            "type": "boolean",
+            "title": "Breached"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/Severity"
+          },
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail",
+            "description": "Short evidence for a breach, e.g. 'Exposed: Aadhaar'"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_id",
+          "language",
+          "category",
+          "breached",
+          "severity",
+          "detail"
+        ],
+        "title": "FormationAttack"
+      },
       "GeneralizationOut": {
         "properties": {
           "fix_set_total": {
@@ -4164,7 +4323,7 @@
           "items"
         ],
         "title": "HelpfulnessOut",
-        "description": "Over-refusal check: how many legitimate banking questions the bot still answers."
+        "description": "Over-refusal check: how many legitimate questions (the target's own, or a built-in banking set) the bot still answers."
       },
       "HttpMethod": {
         "type": "string",

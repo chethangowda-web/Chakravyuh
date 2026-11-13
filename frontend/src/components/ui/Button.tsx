@@ -8,8 +8,9 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'danger'
 type Size = 'sm' | 'md'
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-accent-500 text-zinc-950 hover:bg-accent-400 disabled:bg-accent-500/50',
-  secondary: 'border border-zinc-700 bg-zinc-900 text-zinc-200 hover:bg-zinc-800 disabled:text-zinc-500',
+  primary:
+    'bg-accent-500 text-zinc-950 shadow-[0_8px_24px_-10px_rgba(20,184,166,0.9)] hover:bg-accent-400 hover:shadow-[0_10px_28px_-8px_rgba(20,184,166,0.95)] disabled:bg-accent-500/50 disabled:shadow-none',
+  secondary: 'border border-zinc-700 bg-zinc-900/80 text-zinc-200 hover:border-zinc-600 hover:bg-zinc-800 disabled:text-zinc-500',
   ghost: 'text-zinc-400 hover:bg-zinc-800/80 hover:text-zinc-100 disabled:text-zinc-600',
   danger: 'border border-red-500/40 text-red-300 hover:bg-red-500/10 disabled:text-red-300/50',
 }

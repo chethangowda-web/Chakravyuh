@@ -36,6 +36,21 @@
   background-size: 32px 32px;
 }
 
+/* Page transition */
+.page-enter { animation: page-enter 0.28s ease-out; }
+@keyframes page-enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ---- Living Chakravyuh (Home) ------------------------------------------------------------ */
+.cv-ring { transform-box: view-box; transform-origin: 50% 50%; animation: cv-spin 40s linear infinite; }
+.cv-ring.cv-rev { animation-name: cv-spin-rev; }
+.cv-shield { animation: cv-pulse 2.4s ease-in-out infinite; filter: drop-shadow(0 0 10px rgb(45 212 191 / 0.6)); }
+@keyframes cv-spin { to { transform: rotate(360deg); } }
+@keyframes cv-spin-rev { to { transform: rotate(-360deg); } }
+@keyframes cv-pulse { 0%, 100% { stroke-opacity: 0.45; } 50% { stroke-opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .cv-ring, .cv-shield, .page-enter { animation: none; }
+}
+
 @media print {
   body {
     @apply bg-white text-zinc-900;

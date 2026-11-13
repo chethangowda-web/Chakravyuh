@@ -355,10 +355,15 @@ def _comparison(session: Session, target_id: int, shielded: Target | None) -> Sh
     with_run = with_runs[0] if with_runs else None
     without_run = without_runs[0] if without_runs else None
     same = False
-    if with_run is not None:
-        match = next((c for c in without_runs if _config_key(c.config) == _config_key(with_run.config)), None)
-        if match is not None:
-            without_run, same = match, True
+    # Prefer the LARGEST like-for-like pair (same mode, categories, languages, styles), not just the latest:
+    # a 3-attacks-per-language run says little, and could even make Shield look worse by chance.
+    pairs = [
+        (min(w.completed_cases, b.completed_cases), w.id or 0, w, b)
+        for w in with_runs for b in without_runs if _config_key(w.config) == _config_key(b.config)
+    ]
+    if pairs:
+        _, _, with_run, without_run = max(pairs, key=lambda p: (p[0], p[1]))
+        same = True
 
     def rate(campaign: Campaign | None) -> tuple[float | None, list[LanguageStat]]:
         if campaign is None or campaign.id is None:

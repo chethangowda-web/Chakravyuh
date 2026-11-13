@@ -63,7 +63,7 @@ class HelpfulnessLanguageStat(StrictModel):
 
 
 class HelpfulnessOut(StrictModel):
-    """Over-refusal check: how many legitimate banking questions the bot still answers."""
+    """Over-refusal check: how many legitimate questions (the target's own, or a built-in banking set) the bot still answers."""
 
     id: int
     phase: str = Field(description="'before' or 'after' the fix")

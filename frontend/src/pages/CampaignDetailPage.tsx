@@ -16,6 +16,7 @@ import { useAction } from '../api/hooks/useAction'
 import { HardeningChart } from '../components/charts/HardeningChart'
 import { StatusBadge } from '../components/domain/Badges'
 import { FixPanel } from '../components/domain/FixPanel'
+import { ChakravyuhFormation } from '../components/domain/ChakravyuhFormation'
 import { LivePipeline } from '../components/domain/LivePipeline'
 import { MissionCard } from '../components/domain/MissionTimeline'
 import { ResultsTable } from '../components/domain/ResultsTable'
@@ -169,7 +170,16 @@ function CampaignDetail({ campaignId }: { campaignId: number }) {
       )}
       {regress.error && <div className="mb-4"><ErrorNotice error={regress.error} /></div>}
 
-      {live.data ? (
+      {live.data && !active && c.completed_cases > 0 ? (
+        <div className="mb-6 grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_400px]">
+          <div className="[&>div]:mb-0">
+            <LivePipeline campaign={c} live={live.data} />
+          </div>
+          <Card title="This campaign’s Chakravyuh" description="Each ring is a language; gaps are attacks that got through.">
+            <ChakravyuhFormation campaignId={c.id} />
+          </Card>
+        </div>
+      ) : live.data ? (
         <LivePipeline campaign={c} live={live.data} />
       ) : (
         <Card className="mb-6">

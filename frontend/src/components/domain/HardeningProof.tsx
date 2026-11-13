@@ -51,7 +51,7 @@ export function HelpfulnessCard({ before, after }: { before: Helpfulness | null;
   return (
     <Card
       title="Still helpful? (over-refusal check)"
-      description="A patch that refuses everything blocks every attack but is useless. These are ordinary banking questions, asked in the campaign's languages."
+      description="A patch that refuses everything blocks every attack but is useless. These are the target's ordinary questions (its own list, or a built-in banking set), asked in the campaign's languages."
     >
       <div className="flex flex-wrap items-center gap-6">
         <div className="flex items-center gap-3">
