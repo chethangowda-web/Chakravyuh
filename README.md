@@ -3,7 +3,7 @@
 **An Indic red-teaming lab for LLM and voice applications.**
 Attack your AI app with native, romanized and code-mixed prompts in English, Hindi, Kannada, Telugu and Tamil — powered by Sarvam AI — then see exactly what leaks, with evidence, severity, and regression proof after you fix it.
 
-Built for *Build with Sarvam* (Vertex Club × Sarvam AI) · Security & Developer Tools track.
+Built for *Build with Sarvam* (Vertex Club × Sarvam AI) · Security and Developer Tools track.
 
 > Architecture and API contract: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · Demo walkthrough: [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md)
 
