@@ -1,10 +1,9 @@
 # Render Blueprint: API + web + three demo bots, all on the free plan.
 # Render asks for SARVAM_API_KEY once per service (sync: false); it is never stored in this repo.
-# Service names set the public URLs (https://<name>.onrender.com); if a name is taken, change it
-# here AND in the URLs below.
+# The API and web names were taken on Render, so their URLs carry a suffix (-8kky, -y4fe): the URLs below are the real ones.
 services:
   - type: web
-    name: cvh-reva-api
+    name: chakravyuh-api
     runtime: docker
     plan: free
     dockerfilePath: ./backend/Dockerfile
@@ -16,18 +15,18 @@ services:
       - key: SEED_DEMO_DATA
         value: "true"
       - key: CORS_ORIGINS
-        value: https://cvh-reva-web.onrender.com
+        value: https://chakravyuh-web-y4fe.onrender.com
       - key: PUBLIC_API_BASE_URL
-        value: https://cvh-reva-api.onrender.com
+        value: https://chakravyuh-api-8kky.onrender.com
       - key: DEMO_BHARATBANK_URL
-        value: https://cvh-reva-bharatbank.onrender.com
+        value: https://chakravyuh-bharatbank.onrender.com
       - key: DEMO_SAHAYAK_URL
-        value: https://cvh-reva-sahayak.onrender.com
+        value: https://chakravyuh-sahayak.onrender.com
       - key: DEMO_KAVERI_URL
-        value: https://cvh-reva-kaveri.onrender.com
+        value: https://chakravyuh-kaveri.onrender.com
 
   - type: web
-    name: cvh-reva-bharatbank
+    name: chakravyuh-bharatbank
     runtime: docker
     plan: free
     dockerfilePath: ./demo_target/Dockerfile
@@ -41,7 +40,7 @@ services:
         value: chakravyuh-verify-v0xN7tLskrRl-qyj5FLSNNBz
 
   - type: web
-    name: cvh-reva-sahayak
+    name: chakravyuh-sahayak
     runtime: docker
     plan: free
     dockerfilePath: ./demo_target/Dockerfile
@@ -55,7 +54,7 @@ services:
         value: chakravyuh-verify-n0By9LoooIFh0iM0tgvmniaD
 
   - type: web
-    name: cvh-reva-kaveri
+    name: chakravyuh-kaveri
     runtime: docker
     plan: free
     dockerfilePath: ./demo_target/Dockerfile
@@ -69,13 +68,13 @@ services:
         value: chakravyuh-verify-LPPfONHs7-n6xO8iAGO0Y0iU
 
   - type: web
-    name: cvh-reva-web
+    name: chakravyuh-web
     runtime: static
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://cvh-reva-api.onrender.com
+        value: https://chakravyuh-api-8kky.onrender.com
     routes:
       - type: rewrite
         source: /*
