@@ -1,0 +1,22 @@
+# Pings the free Render services every 10 minutes so they do not go to sleep during the hackathon.
+# It stops by itself after the event (free Render hours are limited), and can be run by hand.
+name: keep-warm
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping services (until 2026-11-16)
+        run: |
+          if [ "$(date -u +%Y%m%d)" -gt 20261116 ]; then echo "Event is over, not pinging."; exit 0; fi
+          for url in \
+            https://chakravyuh-api-8kky.onrender.com/api/v1/health \
+            https://chakravyuh-bharatbank.onrender.com/admin/version \
+            https://chakravyuh-sahayak.onrender.com/admin/version \
+            https://chakravyuh-kaveri.onrender.com/admin/version \
+            https://chakravyuh-web-y4fe.onrender.com/; do
+            curl -s -m 60 -o /dev/null -w "%{http_code} $url\n" "$url" || echo "failed $url"
+          done

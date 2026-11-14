@@ -1,23 +1,9 @@
 import { createBrowserRouter } from 'react-router'
 
 import { AppLayout } from './layouts/AppLayout'
-import { AttackStudioPage } from './pages/AttackStudioPage'
-import { CampaignDetailPage } from './pages/CampaignDetailPage'
-import { ChallengePage } from './pages/ChallengePage'
-import { CampaignsPage } from './pages/CampaignsPage'
-import { DashboardPage } from './pages/DashboardPage'
-import { FindingDetailPage } from './pages/FindingDetailPage'
 import { HomePage } from './pages/HomePage'
-import { IntegrationsPage } from './pages/IntegrationsPage'
-import { NewCampaignPage } from './pages/NewCampaignPage'
 import { NotFoundPage } from './pages/NotFoundPage'
-import { RegressionPage } from './pages/RegressionPage'
-import { ReportPage } from './pages/ReportPage'
-import { ShieldPage } from './pages/ShieldPage'
 import { RouteErrorPage } from './pages/RouteErrorPage'
-import { TargetFormPage } from './pages/TargetFormPage'
-import { TargetsPage } from './pages/TargetsPage'
-import { VoiceLabPage } from './pages/VoiceLabPage'
 
 export const router = createBrowserRouter([
   {
@@ -25,21 +11,21 @@ export const router = createBrowserRouter([
     errorElement: <RouteErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: 'dashboard', element: <DashboardPage /> },
-      { path: 'challenge', element: <ChallengePage /> },
-      { path: 'integrations', element: <IntegrationsPage /> },
-      { path: 'targets', element: <TargetsPage /> },
-      { path: 'targets/new', element: <TargetFormPage /> },
-      { path: 'targets/:targetId', element: <TargetFormPage /> },
-      { path: 'studio', element: <AttackStudioPage /> },
-      { path: 'campaigns', element: <CampaignsPage /> },
-      { path: 'campaigns/new', element: <NewCampaignPage /> },
-      { path: 'campaigns/:campaignId', element: <CampaignDetailPage /> },
-      { path: 'campaigns/:campaignId/report', element: <ReportPage /> },
-      { path: 'findings/:resultId', element: <FindingDetailPage /> },
-      { path: 'voice', element: <VoiceLabPage /> },
-      { path: 'shield', element: <ShieldPage /> },
-      { path: 'regression/:regressionId', element: <RegressionPage /> },
+      { path: 'dashboard', lazy: async () => ({ Component: (await import('./pages/DashboardPage')).DashboardPage }) },
+      { path: 'challenge', lazy: async () => ({ Component: (await import('./pages/ChallengePage')).ChallengePage }) },
+      { path: 'integrations', lazy: async () => ({ Component: (await import('./pages/IntegrationsPage')).IntegrationsPage }) },
+      { path: 'targets', lazy: async () => ({ Component: (await import('./pages/TargetsPage')).TargetsPage }) },
+      { path: 'targets/new', lazy: async () => ({ Component: (await import('./pages/TargetFormPage')).TargetFormPage }) },
+      { path: 'targets/:targetId', lazy: async () => ({ Component: (await import('./pages/TargetFormPage')).TargetFormPage }) },
+      { path: 'studio', lazy: async () => ({ Component: (await import('./pages/AttackStudioPage')).AttackStudioPage }) },
+      { path: 'campaigns', lazy: async () => ({ Component: (await import('./pages/CampaignsPage')).CampaignsPage }) },
+      { path: 'campaigns/new', lazy: async () => ({ Component: (await import('./pages/NewCampaignPage')).NewCampaignPage }) },
+      { path: 'campaigns/:campaignId', lazy: async () => ({ Component: (await import('./pages/CampaignDetailPage')).CampaignDetailPage }) },
+      { path: 'campaigns/:campaignId/report', lazy: async () => ({ Component: (await import('./pages/ReportPage')).ReportPage }) },
+      { path: 'findings/:resultId', lazy: async () => ({ Component: (await import('./pages/FindingDetailPage')).FindingDetailPage }) },
+      { path: 'voice', lazy: async () => ({ Component: (await import('./pages/VoiceLabPage')).VoiceLabPage }) },
+      { path: 'shield', lazy: async () => ({ Component: (await import('./pages/ShieldPage')).ShieldPage }) },
+      { path: 'regression/:regressionId', lazy: async () => ({ Component: (await import('./pages/RegressionPage')).RegressionPage }) },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

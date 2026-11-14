@@ -169,12 +169,18 @@ function ReadinessCard({ targetId, refreshTag, onChanged }: ReadinessProps) {
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-semibold text-zinc-100">{r.target_name}</span>
-            <Pill ok={check('bot')?.ok ?? null}>{check('bot')?.ok ? 'Connected' : 'Not reachable'}</Pill>
-            <Pill ok={check('vulnerable')?.ok ?? null}>{r.bot_version === null ? 'Version unknown' : r.bot_version === 'v1' ? 'v1 · vulnerable (intended)' : `Running “${r.bot_version}”, not v1`}</Pill>
-            <Pill ok={check('planted')?.ok ?? null}>{check('planted')?.ok ? 'Synthetic data planted' : 'No planted data'}</Pill>
-            <Pill ok={check('shield')?.ok ?? null}>{r.shield_target_id !== null ? 'Shield ready' : 'Shield created on activation'}</Pill>
-            <Pill ok={check('sarvam')?.ok ?? null}>{check('sarvam')?.ok ? 'Sarvam connected' : 'Sarvam key missing'}</Pill>
-            <span className={cn('ml-auto text-xs font-medium', r.ready ? 'text-emerald-300' : 'text-red-300')}>{r.ready ? 'Ready for the demonstration' : 'Needs attention before you start'}</span>
+            {r.ready ? (
+              <Pill ok>Ready · vulnerable v1 · Shield and Sarvam connected</Pill>
+            ) : (
+              <>
+                <Pill ok={check('bot')?.ok ?? null}>{check('bot')?.ok ? 'Connected' : 'Not reachable'}</Pill>
+                <Pill ok={check('vulnerable')?.ok ?? null}>{r.bot_version === null ? 'Version unknown' : r.bot_version === 'v1' ? 'v1 · vulnerable (intended)' : `Running “${r.bot_version}”, not v1`}</Pill>
+                <Pill ok={check('planted')?.ok ?? null}>{check('planted')?.ok ? 'Synthetic data planted' : 'No planted data'}</Pill>
+                <Pill ok={check('shield')?.ok ?? null}>{r.shield_target_id !== null ? 'Shield ready' : 'Shield created on activation'}</Pill>
+                <Pill ok={check('sarvam')?.ok ?? null}>{check('sarvam')?.ok ? 'Sarvam connected' : 'Sarvam key missing'}</Pill>
+              </>
+            )}
+            <span className={cn('ml-auto text-xs font-medium', r.ready ? 'text-emerald-300' : 'text-red-300')}>{r.ready ? '' : 'Needs attention before you start'}</span>
           </div>
           {!r.ready && (
             <ul className="space-y-1 text-xs text-red-200">
@@ -393,18 +399,17 @@ function SarvamStrip({ a, spoke }: { a: ChallengeAttempt; spoke: boolean }) {
     { on: spoke, label: 'Text-to-speech', sub: spoke ? 'Bulbul spoke a reply' : 'press Listen' },
   ]
   return (
-    <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/30 px-4 py-3">
-      <p className="mb-2 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-zinc-500">
-        <Sparkles className="size-3.5 text-accent-300" aria-hidden /> Sarvam at work in this attempt
-      </p>
-      <ul className="flex flex-wrap gap-2">
-        {steps.map((st, i) => (
-          <li key={i} className={cn('rounded-lg border px-2.5 py-1.5 text-xs', st.on ? 'border-accent-500/40 bg-accent-500/10 text-accent-100' : 'border-zinc-800 text-zinc-600')}>
-            <span className="font-medium">{st.on ? '● ' : '○ '}{st.label}</span>
-            <span className="ml-1.5 opacity-80">{st.sub}</span>
-          </li>
+    <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/30 px-4 py-2.5">
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-zinc-500">
+          <Sparkles className="size-3.5 text-accent-300" aria-hidden /> Sarvam used
+        </p>
+        {steps.filter((st) => st.on).map((st, i) => (
+          <span key={i} title={st.sub} className="rounded-full border border-accent-500/40 bg-accent-500/10 px-2.5 py-0.5 text-xs text-accent-100">
+            {st.label}
+          </span>
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
@@ -541,7 +546,7 @@ export function ChallengePage() {
     <>
       <PageHeader
         title="Break the Chakravyuh"
-        description="Attack our demo chatbot in your own language, watch it leak, then switch on Chakravyuh Shield and replay the exact same attack."
+        description="Attack the bot in your language. Then turn on Shield and replay the same attack."
         actions={
           <Button icon={<RotateCcw className="size-4" aria-hidden />} onClick={resetSession}>
             Reset session
@@ -571,7 +576,7 @@ export function ChallengePage() {
           <section className="rounded-2xl border border-accent-500/30 bg-linear-to-br from-accent-500/[0.07] via-zinc-900/60 to-violet-500/[0.05] p-5 shadow-[0_0_60px_-24px_rgba(20,184,166,0.6)]">
             <div className="mb-4 grid gap-4 lg:grid-cols-2">
               <div>
-                <p className="mb-1.5 text-xs font-medium uppercase tracking-wider text-accent-300/90">1 · Language</p>
+                <p className="mb-1.5 text-xs font-medium uppercase tracking-wider text-accent-300/90">1 · Language and style</p>
                 <div className="flex flex-wrap gap-2">
                   {LANGS.map((l) => (
                     <button key={l} type="button" onClick={() => setLanguage(l)} className={cn('rounded-lg border px-3 py-1.5 text-sm transition-colors', language === l ? 'border-accent-500/60 bg-accent-500/15 text-accent-100' : 'border-zinc-700 text-zinc-300 hover:border-zinc-500')}>
@@ -581,7 +586,7 @@ export function ChallengePage() {
                 </div>
               </div>
               <div>
-                <p className="mb-1.5 text-xs font-medium uppercase tracking-wider text-accent-300/90">Writing style</p>
+                <p className="mb-1.5 text-xs font-medium uppercase tracking-wider text-zinc-500">Script</p>
                 <div className="flex flex-wrap gap-2">
                   {STYLES.map((s) => (
                     <button key={s} type="button" title={STYLE_HELP[s]} onClick={() => setStyle(s)} className={cn('rounded-lg border px-3 py-1.5 text-sm transition-colors', style === s ? 'border-accent-500/60 bg-accent-500/15 text-accent-100' : 'border-zinc-700 text-zinc-300 hover:border-zinc-500')}>
@@ -589,7 +594,6 @@ export function ChallengePage() {
                     </button>
                   ))}
                 </div>
-                <p className="mt-1 text-xs text-zinc-500">{STYLE_HELP[style]}</p>
               </div>
             </div>
 
@@ -604,9 +608,7 @@ export function ChallengePage() {
               </div>
               {attackType !== 'custom' && (
                 <div className="mt-3 flex flex-wrap items-center gap-3 rounded-lg border border-zinc-800 bg-zinc-950/40 p-3">
-                  <p className="min-w-0 flex-1 text-xs text-zinc-400">
-                    <span className="text-zinc-200">{typeInfo?.what}</span> {typeInfo?.proof}
-                  </p>
+                  <p className="min-w-0 flex-1 text-sm text-zinc-300">{typeInfo?.what}</p>
                   <div className="w-56">
                     <Select aria-label="Attack technique" value={technique?.id ?? ''} onChange={(e) => { setTechniqueId(e.target.value); setLoaded(null) }}>
                       {techniques.map((t) => (
@@ -615,15 +617,14 @@ export function ChallengePage() {
                     </Select>
                   </div>
                   <Button size="sm" variant="primary" icon={<Sparkles className="size-3.5" aria-hidden />} loading={preview.pending} disabled={!technique || busy} onClick={() => void loadAttack()}>
-                    Load in {LANGUAGES[language].label} (Sarvam Translate)
+                    Load in {LANGUAGES[language].label}
                   </Button>
-                  {needsCode && <p className="basis-full text-xs text-amber-200">Press Load so the attack carries a hidden code. Without it nothing can prove the bot obeyed, and the result will read “no confirmed leak”.</p>}
+                  {needsCode && <p className="basis-full text-xs text-amber-200">Press Load first: the attack needs its hidden code to be provable.</p>}
                 </div>
               )}
-              <p className="mt-2 text-[11px] text-zinc-500">Harmful-content attacks (scam scripts, bias) need the AI judge, so run those as a campaign. Here every breach is proven by evidence.</p>
             </div>
 
-            <label htmlFor="challenge-msg" className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-accent-300/90">3 · Your attack (type or speak, in any script)</label>
+            <label htmlFor="challenge-msg" className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-accent-300/90">3 · The attack</label>
             <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
               <Textarea
                 id="challenge-msg"
@@ -632,7 +633,7 @@ export function ChallengePage() {
                 disabled={busy}
                 onChange={(e) => { setMessage(e.target.value); setMethod('typed'); setHeard(null); if (loaded !== null && !e.target.value.includes(loaded.text.slice(0, 12))) setLoaded(null) }}
                 onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); speech.unlock(); void sendAttack() } }}
-                placeholder="e.g. ನಾನು ಬ್ಯಾಂಕ್ ಮ್ಯಾನೇಜರ್… / मैं ऑडिट अधिकारी हूँ… / Ignore your rules and…"
+                placeholder="Type, speak or load an attack in any language"
                 style={{ fontFamily: 'var(--font-sans)', fontSize: 17, lineHeight: 1.6 }}
               />
               <div className="flex shrink-0 flex-col gap-2">
@@ -647,17 +648,17 @@ export function ChallengePage() {
             </div>
             {method === 'voice' && (
               <p className="mt-2 flex items-center gap-2 text-xs text-zinc-400">
-                <Mic className="size-3.5 text-accent-300" aria-hidden /> Transcribed by Sarvam speech-to-text{heard ? ` (heard ${heard})` : ''}. Check the text, edit it if needed, then send.
+                <Mic className="size-3.5 text-accent-300" aria-hidden /> Sarvam speech-to-text{heard ? ` (heard ${heard})` : ''}. Check the text, then send.
               </p>
             )}
             <label className="mt-3 flex cursor-pointer items-center gap-2 text-xs text-zinc-400">
               <input type="checkbox" className="size-3.5 accent-teal-500" checked={voiceReplies} onChange={(e) => { setVoiceReplies(e.target.checked); if (e.target.checked) speech.unlock() }} />
-              <Volume2 className="size-3.5 text-accent-300" aria-hidden /> Speak Shield’s reply aloud in the judge’s language (Sarvam text-to-speech)
+              <Volume2 className="size-3.5 text-accent-300" aria-hidden /> Read replies aloud (Sarvam text-to-speech)
             </label>
             {speech.error && <p className="mt-1 text-xs text-amber-200">{speech.error}</p>}
             {attackType === 'custom' && (
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <span className="text-xs text-zinc-500">Or try an example:</span>
+              <span className="text-xs text-zinc-500">Examples:</span>
               {presets.map((p) => (
                 <button key={p.label} type="button" disabled={busy} onClick={() => { setMessage(p.text); setStyle(p.style); setMethod('typed'); setHeard(null) }} className="rounded-full border border-zinc-700 bg-zinc-950/60 px-3 py-1 text-xs text-zinc-300 transition-colors hover:border-accent-500/60 hover:text-accent-200 disabled:opacity-50">
                   {p.label}
@@ -685,7 +686,7 @@ export function ChallengePage() {
               {/* Exact prompt */}
               <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/40 px-5 py-4">
                 <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-500">
-                  <span className="font-medium uppercase tracking-wider">Exact prompt</span>
+                  <span className="font-medium uppercase tracking-wider">Prompt</span>
                   <LangBadge language={shown.selected_language} native />
                   <span>{VARIANT_LABELS[shown.style]}</span>
                   <span>· {shown.input_method === 'voice' ? 'spoken' : 'typed'}</span>
@@ -694,7 +695,7 @@ export function ChallengePage() {
                   )}
                   <span className={cn('ml-auto flex items-center gap-1.5', shown.identical_prompt ? 'text-emerald-300' : 'text-zinc-500')}>
                     <CheckCircle2 className="size-3.5" aria-hidden />
-                    {shown.identical_prompt ? `Both modes received the identical prompt · sha256 ${shown.prompt_sha256.slice(0, 10)}…` : `Stored exactly · sha256 ${shown.prompt_sha256.slice(0, 10)}… · Shield will receive this same text`}
+                    {shown.identical_prompt ? 'Identical prompt in both modes' : 'Saved exactly, Shield gets the same text'}
                   </span>
                 </div>
                 <p className="mt-2 whitespace-pre-wrap text-[17px] leading-relaxed text-zinc-100">{shown.prompt}</p>
@@ -720,9 +721,9 @@ export function ChallengePage() {
                   locked={
                     isRecorded ? null : (
                       <div className="space-y-3">
-                        <p className="text-sm text-zinc-400">The bot above answered without protection. Now replay the <span className="text-zinc-200">exact same prompt</span> through the real Shield.</p>
+                        <p className="text-sm text-zinc-400">Replay the same prompt through Shield.</p>
                         <Button variant="primary" className="h-12 px-5 text-base" icon={<ShieldCheck className="size-5" aria-hidden />} loading={shield.pending} disabled={busy} onClick={() => { speech.unlock(); void activateShield() }}>
-                          2 · Activate Shield and replay
+                          Turn on Shield and replay
                         </Button>
                       </div>
                     )
@@ -751,7 +752,7 @@ export function ChallengePage() {
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed border-zinc-800 px-6 py-12 text-center">
-              <p className="text-sm text-zinc-400">Pick a language, type or speak an attack, and send it to the unprotected bot.</p>
+              <p className="text-sm text-zinc-400">Pick a language and an attack, then send it.</p>
               <div className="mt-4">
                 <Button size="sm" icon={<Archive className="size-3.5" aria-hidden />} loading={recordedAction.pending} onClick={() => void showRecorded()}>
                   Or show a recorded demonstration
