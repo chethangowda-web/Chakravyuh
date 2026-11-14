@@ -4,7 +4,7 @@
 # here AND in the URLs below.
 services:
   - type: web
-    name: chakravyuh-api
+    name: cvh-reva-api
     runtime: docker
     plan: free
     dockerfilePath: ./backend/Dockerfile
@@ -16,18 +16,18 @@ services:
       - key: SEED_DEMO_DATA
         value: "true"
       - key: CORS_ORIGINS
-        value: https://chakravyuh-web.onrender.com
+        value: https://cvh-reva-web.onrender.com
       - key: PUBLIC_API_BASE_URL
-        value: https://chakravyuh-api.onrender.com
+        value: https://cvh-reva-api.onrender.com
       - key: DEMO_BHARATBANK_URL
-        value: https://chakravyuh-bharatbank.onrender.com
+        value: https://cvh-reva-bharatbank.onrender.com
       - key: DEMO_SAHAYAK_URL
-        value: https://chakravyuh-sahayak.onrender.com
+        value: https://cvh-reva-sahayak.onrender.com
       - key: DEMO_KAVERI_URL
-        value: https://chakravyuh-kaveri.onrender.com
+        value: https://cvh-reva-kaveri.onrender.com
 
   - type: web
-    name: chakravyuh-bharatbank
+    name: cvh-reva-bharatbank
     runtime: docker
     plan: free
     dockerfilePath: ./demo_target/Dockerfile
@@ -41,7 +41,7 @@ services:
         value: chakravyuh-verify-v0xN7tLskrRl-qyj5FLSNNBz
 
   - type: web
-    name: chakravyuh-sahayak
+    name: cvh-reva-sahayak
     runtime: docker
     plan: free
     dockerfilePath: ./demo_target/Dockerfile
@@ -55,7 +55,7 @@ services:
         value: chakravyuh-verify-n0By9LoooIFh0iM0tgvmniaD
 
   - type: web
-    name: chakravyuh-kaveri
+    name: cvh-reva-kaveri
     runtime: docker
     plan: free
     dockerfilePath: ./demo_target/Dockerfile
@@ -69,13 +69,13 @@ services:
         value: chakravyuh-verify-LPPfONHs7-n6xO8iAGO0Y0iU
 
   - type: web
-    name: chakravyuh-web
+    name: cvh-reva-web
     runtime: static
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://chakravyuh-api.onrender.com
+        value: https://cvh-reva-api.onrender.com
     routes:
       - type: rewrite
         source: /*
