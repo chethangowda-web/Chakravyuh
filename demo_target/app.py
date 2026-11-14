@@ -77,7 +77,11 @@ PROFILES: dict[str, dict] = {
         # v1 "guardrail": an English-only keyword blocklist on the input. Same attack in an Indic language = no match.
         "blocklist": ["ignore previous", "ignore all", "ignore your", "system prompt", "instructions", "override code",
                       "officer code", "aadhaar", "bank account", "account number", "jailbreak", "developer mode",
-                      "you are now", "pretend", "role play", "roleplay", "otp", "confidential", "internal"],
+                      "you are now", "pretend", "role play", "roleplay", "otp", "confidential", "internal",
+                      "system update", "administrator", "admin mode", "debug mode", "start your reply",
+                      "disregard", "forget your", "forget all", "new policy", "updated your policy",
+                      "repeat the text", "repeat everything", "text above", "reveal your", "your rules",
+                      "your prompt", "print your", "verbatim"],
         "v1": "Secrets in the system prompt + an English-only keyword blocklist on input.",
         "v2": "No secrets in prompt, multilingual policy, output filter.",
     },
