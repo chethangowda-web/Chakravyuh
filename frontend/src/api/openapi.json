@@ -2482,6 +2482,487 @@
           }
         }
       }
+    },
+    "/api/v1/challenge/{target_id}/readiness": {
+      "get": {
+        "tags": [
+          "challenge"
+        ],
+        "summary": "Get Readiness",
+        "description": "Is the demo bot reachable, verified and in its intended vulnerable state?",
+        "operationId": "getChallengeReadiness",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadinessOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/challenge/{target_id}/probe": {
+      "post": {
+        "tags": [
+          "challenge"
+        ],
+        "summary": "Probe",
+        "description": "Send one KNOWN attack to the unprotected bot and report whether it really leaks right now.",
+        "operationId": "probeChallengeBot",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProbeOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/challenge/{target_id}/reset-bot": {
+      "post": {
+        "tags": [
+          "challenge"
+        ],
+        "summary": "Reset Bot",
+        "description": "Put the demo bot back on v1 (an applied auto-fix leaves it on 'custom').",
+        "operationId": "resetChallengeBot",
+        "parameters": [
+          {
+            "name": "target_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Target Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/challenge/attack": {
+      "post": {
+        "tags": [
+          "challenge"
+        ],
+        "summary": "Attack",
+        "description": "Step 1: store the exact prompt and attack the UNPROTECTED bot.",
+        "operationId": "challengeAttack",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttemptOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/challenge/attempts/{attempt_id}/shield": {
+      "post": {
+        "tags": [
+          "challenge"
+        ],
+        "summary": "Activate Shield",
+        "description": "Step 2: replay the stored prompt through the real Shield.",
+        "operationId": "challengeActivateShield",
+        "parameters": [
+          {
+            "name": "attempt_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Attempt Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttemptOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/challenge/attempts/{attempt_id}/replay": {
+      "post": {
+        "tags": [
+          "challenge"
+        ],
+        "summary": "Replay",
+        "description": "Send the stored prompt to both modes again.",
+        "operationId": "challengeReplay",
+        "parameters": [
+          {
+            "name": "attempt_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Attempt Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttemptOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/challenge/sessions/{session_id}": {
+      "get": {
+        "tags": [
+          "challenge"
+        ],
+        "summary": "Get Session Attempts",
+        "operationId": "getChallengeSession",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/challenge/recorded": {
+      "get": {
+        "tags": [
+          "challenge"
+        ],
+        "summary": "Get Recorded",
+        "description": "Fallback: a real earlier run that showed the full story, always labelled source='recorded'.",
+        "operationId": "getRecordedChallenge",
+        "parameters": [
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/LanguageCode"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Language"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttemptOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/challenge/transcribe": {
+      "post": {
+        "tags": [
+          "challenge"
+        ],
+        "summary": "Transcribe",
+        "description": "Speech to text only; nothing is attacked until the judge reviews and sends the text.",
+        "operationId": "challengeTranscribe",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_challengeTranscribe"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TranscribeOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2619,6 +3100,85 @@
           "warnings"
         ],
         "title": "AttackPreviewResponse"
+      },
+      "AttackRequest": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 8,
+            "title": "Session Id"
+          },
+          "target_id": {
+            "type": "integer",
+            "title": "Target Id"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Message"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "style": {
+            "$ref": "#/components/schemas/ScriptVariant",
+            "default": "native"
+          },
+          "input_method": {
+            "type": "string",
+            "enum": [
+              "typed",
+              "voice"
+            ],
+            "title": "Input Method",
+            "default": "typed"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AttackCategory"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "template_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Template Id"
+          },
+          "marker_token": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 20
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marker Token"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "target_id",
+          "message",
+          "language"
+        ],
+        "title": "AttackRequest"
       },
       "AttackTemplateList": {
         "properties": {
@@ -2774,6 +3334,206 @@
         "title": "AttackWrapper",
         "description": "Optional local (no-API) transformations applied after localization."
       },
+      "AttemptOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "target_id": {
+            "type": "integer",
+            "title": "Target Id"
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt"
+          },
+          "prompt_sha256": {
+            "type": "string",
+            "title": "Prompt Sha256"
+          },
+          "selected_language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "style": {
+            "$ref": "#/components/schemas/ScriptVariant"
+          },
+          "input_method": {
+            "type": "string",
+            "enum": [
+              "typed",
+              "voice"
+            ],
+            "title": "Input Method"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AttackCategory"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Library attack type, null for the judge's own words"
+          },
+          "template_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Template Id"
+          },
+          "marker_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marker Token",
+            "description": "Injected code that proves the bot obeyed, if the attack carries one"
+          },
+          "detected_language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detected Language"
+          },
+          "detected_script": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detected Script"
+          },
+          "english": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "English"
+          },
+          "language_matches": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language Matches",
+            "description": "Whether Sarvam's detected language equals the selected one"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "unprotected": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "shield": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "identical_prompt": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Identical Prompt",
+            "description": "Both runs received exactly the same text; null until both ran"
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "shield_stopped_breach",
+              "shield_missed",
+              "both_held",
+              "shield_blocked_without_breach",
+              "unprotected_only",
+              "incomplete"
+            ],
+            "title": "Outcome"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "live",
+              "recorded"
+            ],
+            "title": "Source"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "session_id",
+          "target_id",
+          "prompt",
+          "prompt_sha256",
+          "selected_language",
+          "style",
+          "input_method",
+          "category",
+          "template_id",
+          "marker_token",
+          "detected_language",
+          "detected_script",
+          "english",
+          "language_matches",
+          "created_at",
+          "unprotected",
+          "shield",
+          "identical_prompt",
+          "outcome",
+          "source"
+        ],
+        "title": "AttemptOut"
+      },
       "AudioAssetOut": {
         "properties": {
           "id": {
@@ -2845,6 +3605,31 @@
           "upload"
         ],
         "title": "AudioSource"
+      },
+      "Body_challengeTranscribe": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "description": "WAV/WebM/OGG/MP3/M4A, at most 2 MB"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LanguageCode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_challengeTranscribe"
       },
       "Body_uploadVoice": {
         "properties": {
@@ -3466,6 +4251,43 @@
         ],
         "title": "CategoryStat"
       },
+      "CheckOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "ok": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ok",
+            "description": "true = good, false = needs attention, null = could not be determined"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "ok",
+          "detail"
+        ],
+        "title": "CheckOut"
+      },
       "Confidence": {
         "type": "string",
         "enum": [
@@ -3607,6 +4429,51 @@
           "error"
         ],
         "title": "ErrorResponse"
+      },
+      "EvidenceItem": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "planted_secret",
+              "planted_personal_data",
+              "prompt_leak",
+              "injected_instruction",
+              "possible_pii_pattern"
+            ],
+            "title": "Kind"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed",
+            "description": "false = only a PII-looking pattern with no link to planted data"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value",
+            "description": "The matched text (synthetic demo data), when it is safe to show"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "confirmed",
+          "label",
+          "value"
+        ],
+        "title": "EvidenceItem"
       },
       "FalseBlockItem": {
         "properties": {
@@ -5143,6 +6010,119 @@
         "title": "Mutation",
         "description": "Every step that can appear in a test case's mutation chain."
       },
+      "ProbeOut": {
+        "properties": {
+          "leaked": {
+            "type": "boolean",
+            "title": "Leaked"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt"
+          },
+          "attack_label": {
+            "type": "string",
+            "title": "Attack Label",
+            "description": "Which known attack was sent last, e.g. 'auditor asks for personal data'"
+          },
+          "latency_ms": {
+            "type": "integer",
+            "title": "Latency Ms"
+          },
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "leaked",
+          "language",
+          "prompt",
+          "attack_label",
+          "latency_ms",
+          "evidence",
+          "error"
+        ],
+        "title": "ProbeOut",
+        "description": "Result of sending one KNOWN attack to the unprotected bot to confirm it is in the vulnerable state."
+      },
+      "ReadinessOut": {
+        "properties": {
+          "target_id": {
+            "type": "integer",
+            "title": "Target Id"
+          },
+          "target_name": {
+            "type": "string",
+            "title": "Target Name"
+          },
+          "shield_target_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shield Target Id"
+          },
+          "bot_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bot Version",
+            "description": "v1 = the intended vulnerable state; null = unknown"
+          },
+          "ready": {
+            "type": "boolean",
+            "title": "Ready",
+            "description": "Everything the live demonstration needs is in place"
+          },
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/CheckOut"
+            },
+            "type": "array",
+            "title": "Checks"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "target_id",
+          "target_name",
+          "shield_target_id",
+          "bot_version",
+          "ready",
+          "checks"
+        ],
+        "title": "ReadinessOut"
+      },
       "RegressionCaseOut": {
         "properties": {
           "base_test_case_id": {
@@ -5380,6 +6360,27 @@
           "new_vulnerability"
         ],
         "title": "RegressionSummary"
+      },
+      "ResetOut": {
+        "properties": {
+          "bot_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bot Version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "bot_version"
+        ],
+        "title": "ResetOut"
       },
       "ResultDetail": {
         "properties": {
@@ -5829,6 +6830,192 @@
         ],
         "title": "ResultSummary"
       },
+      "RunOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "attempt_id": {
+            "type": "integer",
+            "title": "Attempt Id"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "unprotected",
+              "shield"
+            ],
+            "title": "Mode"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "live",
+              "recorded"
+            ],
+            "title": "Source",
+            "description": "'live' only for a run that just executed; 'recorded' for a stored one"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "error",
+              "timeout"
+            ],
+            "title": "Status"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "breached",
+              "possible",
+              "held",
+              "blocked",
+              "redacted",
+              "allowed",
+              "error"
+            ],
+            "title": "Verdict"
+          },
+          "reply": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply"
+          },
+          "shield_action": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "allowed",
+                  "blocked_input",
+                  "redacted_output",
+                  "blocked_output"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shield Action"
+          },
+          "shield_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shield Reason"
+          },
+          "shield_rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shield Rule"
+          },
+          "shield_category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shield Category"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceItem"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "spans": {
+            "items": {
+              "$ref": "#/components/schemas/SpanOut"
+            },
+            "type": "array",
+            "title": "Spans"
+          },
+          "latency_ms": {
+            "type": "integer",
+            "title": "Latency Ms"
+          },
+          "prompt_sha256": {
+            "type": "string",
+            "title": "Prompt Sha256",
+            "description": "Hash of the exact text this run received"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "finding_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finding Id",
+            "description": "Open /findings/{id} for the full stored evidence"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "attempt_id",
+          "mode",
+          "source",
+          "status",
+          "verdict",
+          "reply",
+          "shield_action",
+          "shield_reason",
+          "shield_rule",
+          "shield_category",
+          "evidence",
+          "spans",
+          "latency_ms",
+          "prompt_sha256",
+          "error",
+          "finding_id",
+          "created_at"
+        ],
+        "title": "RunOut"
+      },
       "ScriptVariant": {
         "type": "string",
         "enum": [
@@ -5934,6 +7121,28 @@
           "heatmap"
         ],
         "title": "SecurityBreakdown"
+      },
+      "SessionOut": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "attempts": {
+            "items": {
+              "$ref": "#/components/schemas/AttemptOut"
+            },
+            "type": "array",
+            "title": "Attempts"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "attempts"
+        ],
+        "title": "SessionOut"
       },
       "Severity": {
         "type": "string",
@@ -6432,6 +7641,30 @@
         ],
         "title": "ShieldStats"
       },
+      "SpanOut": {
+        "properties": {
+          "start": {
+            "type": "integer",
+            "title": "Start"
+          },
+          "end": {
+            "type": "integer",
+            "title": "End"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "start",
+          "end",
+          "confirmed"
+        ],
+        "title": "SpanOut"
+      },
       "SynthesizeRequest": {
         "properties": {
           "text": {
@@ -6925,6 +8158,32 @@
         ],
         "title": "TextSpan",
         "description": "Character offsets into `extracted_reply` to highlight as evidence."
+      },
+      "TranscribeOut": {
+        "properties": {
+          "transcript": {
+            "type": "string",
+            "title": "Transcript"
+          },
+          "detected_language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detected Language"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "transcript",
+          "detected_language"
+        ],
+        "title": "TranscribeOut"
       },
       "VariantStat": {
         "properties": {

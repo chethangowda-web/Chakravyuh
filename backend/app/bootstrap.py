@@ -3,7 +3,7 @@
 SEED_DEMO_DATA=true      on first boot (no database yet) copy the demo snapshot from backend/seed/ into DATA_DIR,
                          so a fresh server shows the prepared campaigns instead of an empty dashboard.
 DEMO_BHARATBANK_URL=...  public origin of the BharatBank demo bot; the demo target (and its fix webhook) is
-DEMO_SAHAYAK_URL=...     pointed there on every boot. Same for Sahayak Seva.
+DEMO_SAHAYAK_URL=...     pointed there on every boot. Same for Sahayak Seva and (DEMO_KAVERI_URL) Kaveri Bank Assist.
 DEMO_TARGET_API_KEY=...  if the demo bots require `x-demo-key`, the demo targets send it.
 Shield targets are pointed at PUBLIC_API_BASE_URL on every boot.
 
@@ -28,6 +28,7 @@ SEED_DIR = Path(__file__).resolve().parent.parent / "seed"
 _DEMO_TARGETS = {  # target-name prefix -> settings attribute holding the bot's public origin
     "BharatBank Assist": "demo_bharatbank_url",
     "Sahayak Seva": "demo_sahayak_url",
+    "Kaveri Bank Assist": "demo_kaveri_url",
 }
 
 

@@ -48,7 +48,7 @@ function Hero({ journey }: { journey: Journey | undefined }) {
             See the results
           </LinkButton>
         )}
-        <LinkButton to="/dashboard">Dashboard</LinkButton>
+        <LinkButton to="/challenge">Try to break it yourself</LinkButton>
         <span className="ml-1 flex items-center gap-2 text-sm text-zinc-500">
           <span className="font-medium text-zinc-300">Test</span> → <span className="font-medium text-zinc-300">Fix</span> →{' '}
           <span className="font-medium text-zinc-300">Protect</span>

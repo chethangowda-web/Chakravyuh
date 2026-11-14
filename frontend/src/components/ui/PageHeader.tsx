@@ -8,6 +8,7 @@ import {
   Plug,
   Radar,
   ShieldCheck,
+  Swords,
 } from 'lucide-react'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
 import { useLocation } from 'react-router'
@@ -26,6 +27,7 @@ type Icon = ComponentType<SVGProps<SVGSVGElement>>
 const SECTIONS: ReadonlyArray<{ prefix: string; eyebrow: string; icon: Icon }> = [
   { prefix: '/campaigns/new', eyebrow: '1 · Test & fix · New campaign', icon: Radar },
   { prefix: '/dashboard', eyebrow: 'Overview · Dashboard', icon: LayoutDashboard },
+  { prefix: '/challenge', eyebrow: 'Live · Try to break it', icon: Swords },
   { prefix: '/targets', eyebrow: '1 · Test & fix · Targets', icon: Crosshair },
   { prefix: '/studio', eyebrow: '1 · Test & fix · Attack Studio', icon: FlaskConical },
   { prefix: '/campaigns', eyebrow: '1 · Test & fix · Campaigns', icon: Radar },

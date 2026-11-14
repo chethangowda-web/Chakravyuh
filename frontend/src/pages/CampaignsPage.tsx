@@ -15,7 +15,7 @@ import { cn } from '../lib/cn'
 import { timeAgo } from '../lib/format'
 import type { Campaign } from '../types/domain'
 
-type Kind = 'library' | 'adaptive' | 'voice' | 'replay' | 'regression' | 'extension'
+type Kind = 'library' | 'adaptive' | 'voice' | 'replay' | 'regression' | 'extension' | 'challenge'
 
 const KINDS: Record<Kind, { label: string; className: string }> = {
   library: { label: 'Library', className: 'bg-zinc-800 text-zinc-300 ring-zinc-700' },
@@ -24,10 +24,12 @@ const KINDS: Record<Kind, { label: string; className: string }> = {
   replay: { label: 'Voice replay', className: 'bg-sky-500/15 text-sky-300 ring-sky-500/30' },
   regression: { label: 'Regression', className: 'bg-amber-400/15 text-amber-200 ring-amber-400/30' },
   extension: { label: 'Extension', className: 'bg-accent-500/15 text-accent-300 ring-accent-500/30' },
+  challenge: { label: 'Judge challenge', className: 'bg-rose-500/15 text-rose-300 ring-rose-500/30' },
 }
 
 function kindOf(c: Campaign): Kind {
   if (c.name.startsWith('Browser extension')) return 'extension'
+  if (c.name.startsWith('Judge challenge')) return 'challenge'
   if (c.config.mode === 'voice_replay') return 'replay'
   if (c.parent_campaign_id !== null) return 'regression'
   if (c.name.startsWith('Voice ·')) return 'voice'

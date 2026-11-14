@@ -15,6 +15,7 @@ from app.schemas.common import StrictModel
 from app.schemas.dashboard import LanguageStat
 from app.schemas.enums import AttackCategory, CampaignStatus, LanguageCode, Severity, Verdict
 from app.services import analytics
+from app.services.campaign_kinds import not_interactive
 
 Scope = Literal["bare", "shield"]
 _REPLAY = 40
@@ -52,7 +53,7 @@ def formation(session: Session, scope: Scope, campaign_id: int | None = None) ->
             c for c in session.exec(
                 select(Campaign.id).join(Target, col(Target.id) == col(Campaign.target_id))
                 .where(col(Campaign.parent_campaign_id).is_(None), col(Campaign.status) == CampaignStatus.COMPLETED,
-                       shielded)
+                       shielded, *not_interactive())
             ).all() if c is not None
         ]
     rings = analytics.breakdown(session, campaign_ids).by_language if campaign_ids else []

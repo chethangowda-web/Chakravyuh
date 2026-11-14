@@ -18,6 +18,7 @@ from app.schemas.dashboard import (
 )
 from app.schemas.enums import AttackCategory, Confidence, LanguageCode, ScriptVariant, Verdict
 from app.services import mappers
+from app.services.campaign_kinds import not_interactive
 from app.services.campaigns import get_campaign_or_404, get_target_or_404
 
 
@@ -76,7 +77,7 @@ def dashboard(session: Session, campaign_id: int | None) -> DashboardSummary:
         scope = [campaign_id]
     else:  # all original campaigns; regression reruns would double count
         scope = [c for c in session.exec(
-            select(Campaign.id).where(col(Campaign.parent_campaign_id).is_(None))
+            select(Campaign.id).where(col(Campaign.parent_campaign_id).is_(None), *not_interactive())
         ).all() if c is not None]
     recent = list(session.exec(select(Campaign).order_by(col(Campaign.id).desc()).limit(6)).all())
     total_campaigns = len(session.exec(select(Campaign.id)).all())

@@ -11,6 +11,8 @@ import { ErrorNotice } from '../components/ui/ErrorNotice'
 import { Skeleton } from '../components/ui/Skeleton'
 import { dateTime, pct, truncate } from '../lib/format'
 import { useIdParam } from '../lib/params'
+import { DPDP_NOTE, OWASP_URL, mayExposePersonalData, owaspFor } from '../lib/standards'
+import type { ResultDetail, SecurityBreakdown } from '../types/domain'
 
 export function ReportPage() {
   const campaignId = useIdParam('campaignId')
@@ -62,6 +64,8 @@ function Report({ campaignId }: { campaignId: number }) {
           {r.recommendations.map((rec) => <li key={rec}>{rec}</li>)}
         </ul>
       </section>
+
+      <StandardsSection breakdown={b} findings={r.top_findings} />
 
       <section className="break-inside-avoid">
         <h2 className="mb-1 text-lg font-semibold">Language Security Gap</h2>
@@ -116,5 +120,73 @@ function Metric({ label, value }: { label: string; value: string }) {
       <p className="text-[11px] uppercase tracking-wider text-zinc-500">{label}</p>
       <p className="mt-1 text-2xl font-semibold tabular-nums">{value}</p>
     </div>
+  )
+}
+
+/** OWASP LLM Top 10 mapping of this run's attacks, plus a DPDP note when findings may expose personal data. */
+function StandardsSection({ breakdown, findings }: { breakdown: SecurityBreakdown; findings: readonly ResultDetail[] }) {
+  const byCode = new Map<string, { name: string; total: number; vulnerable: number }>()
+  let unmapped = { total: 0, vulnerable: 0 }
+  for (const c of breakdown.by_category) {
+    const ref = owaspFor(c.category)
+    if (ref === null) {
+      unmapped = { total: unmapped.total + c.total, vulnerable: unmapped.vulnerable + c.vulnerable }
+      continue
+    }
+    const row = byCode.get(ref.code) ?? { name: ref.name.replace(' (jailbreaking)', ''), total: 0, vulnerable: 0 }
+    row.total += c.total
+    row.vulnerable += c.vulnerable
+    byCode.set(ref.code, row)
+  }
+  const rows = [...byCode.entries()].sort(([a], [b]) => a.localeCompare(b))
+  const personal = findings.filter((f) => mayExposePersonalData(f.detector_hits)).length
+  if (rows.length === 0 && personal === 0) return null
+  return (
+    <section className="break-inside-avoid">
+      <h2 className="mb-1 text-lg font-semibold">Standards mapping</h2>
+      <p className="mb-3 text-sm text-zinc-400 print:text-zinc-600">
+        How this run's attacks map to the{' '}
+        <a className="text-accent-400 underline-offset-2 hover:underline print:text-zinc-700" href={OWASP_URL}>
+          OWASP Top 10 for LLM Applications (2025)
+        </a>
+        .
+      </p>
+      <table className="w-full text-left text-sm">
+        <thead>
+          <tr className="border-b border-zinc-800 text-[11px] uppercase tracking-wider text-zinc-500 print:border-zinc-300">
+            <th className="py-2 pr-3 font-medium">Risk</th>
+            <th className="py-2 pr-3 text-right font-medium">Attacks</th>
+            <th className="py-2 text-right font-medium">Got through</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-zinc-800/70 print:divide-zinc-200">
+          {rows.map(([code, row]) => (
+            <tr key={code}>
+              <td className="py-2 pr-3">
+                <span className="font-mono text-xs text-violet-300 print:text-zinc-700">{code}</span> {row.name}
+              </td>
+              <td className="py-2 pr-3 text-right font-mono tabular-nums">{row.total}</td>
+              <td className="py-2 text-right font-mono tabular-nums text-red-300 print:text-red-700">
+                {row.vulnerable} ({row.total ? Math.round((row.vulnerable / row.total) * 100) : 0}%)
+              </td>
+            </tr>
+          ))}
+          {unmapped.total > 0 && (
+            <tr>
+              <td className="py-2 pr-3 text-zinc-400">Harmful content (content safety, outside the OWASP LLM Top 10)</td>
+              <td className="py-2 pr-3 text-right font-mono tabular-nums">{unmapped.total}</td>
+              <td className="py-2 text-right font-mono tabular-nums text-red-300 print:text-red-700">
+                {unmapped.vulnerable} ({Math.round((unmapped.vulnerable / unmapped.total) * 100)}%)
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      {personal > 0 && (
+        <p className="mt-4 rounded-lg border border-amber-400/30 bg-amber-400/5 p-3 text-sm text-amber-100 print:border-amber-300 print:bg-amber-50 print:text-amber-900">
+          <span className="font-medium">{personal} of the top findings below</span> may expose personal data. {DPDP_NOTE}
+        </p>
+      )}
+    </section>
   )
 }

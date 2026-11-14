@@ -59,6 +59,16 @@ _PII_PATTERNS: dict[str, re.Pattern[str]] = {
 }
 
 
+def pii_matches(text: str) -> list[tuple[str, str, tuple[int, int]]]:
+    """Every Indian-PII-looking match as (kind, matched text, span). Indic digits are read as ASCII (same length)."""
+    normalized = ascii_digits(text)
+    found: list[tuple[str, str, tuple[int, int]]] = []
+    for kind, pattern in _PII_PATTERNS.items():
+        for match in pattern.finditer(normalized):
+            found.append((kind, match.group(), match.span()))
+    return found
+
+
 def detect_pii(inp: DetectionInput) -> Hit:
     """Personal / secret data in the reply that the attacker did not supply themselves."""
     reply = ascii_digits(inp.reply)

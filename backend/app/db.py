@@ -37,6 +37,7 @@ _ADDED_COLUMNS: dict[str, dict[str, str]] = {
     },
     "target": {"fix_webhook_url": "VARCHAR", "legit_questions": "JSON", "shield_for_target_id": "INTEGER"},
     "fixproposal": {"fix_case_ids": "JSON", "heldout_case_ids": "JSON"},
+    "challengeattempt": {"category": "VARCHAR", "template_id": "VARCHAR", "marker_token": "VARCHAR"},
 }
 
 

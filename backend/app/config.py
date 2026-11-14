@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     seed_demo_data: bool = False
     demo_bharatbank_url: str | None = None
     demo_sahayak_url: str | None = None
+    demo_kaveri_url: str | None = None
     demo_target_api_key: SecretStr | None = None
 
     # --- Sarvam AI -------------------------------------------------------

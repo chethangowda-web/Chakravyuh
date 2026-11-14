@@ -6,7 +6,7 @@ from sqlmodel import Session, col, select
 from app.models import Campaign, FixProposal, Target
 from app.schemas.common import StrictModel
 from app.schemas.enums import CampaignStatus, VerificationStatus
-from app.services.manual import CAMPAIGN_NAME as EXTENSION_CAMPAIGN
+from app.services.campaign_kinds import not_interactive
 
 
 class JourneyStep(StrictModel):
@@ -26,7 +26,7 @@ def journey(session: Session) -> Journey:
     verified = [t for t in targets if t.verification_status is VerificationStatus.VERIFIED]
     campaigns = session.exec(
         select(Campaign).where(col(Campaign.parent_campaign_id).is_(None), col(Campaign.status) == CampaignStatus.COMPLETED,
-                               col(Campaign.name) != EXTENSION_CAMPAIGN)
+                               *not_interactive())
         .order_by(col(Campaign.id).desc())
     ).all()
     fix = session.exec(select(FixProposal).where(col(FixProposal.applied).is_(True))

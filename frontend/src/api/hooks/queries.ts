@@ -88,6 +88,21 @@ export function useFormation(scope: 'bare' | 'shield', campaignId: number | null
   return useApiQuery(`formation:${scope}:${campaignId ?? 'all'}`, fetcher)
 }
 
+/** Is the demo bot ready for the Live Judge Challenge? Re-fetched when `refreshTag` changes. */
+export function useChallengeReadiness(targetId: number | null, refreshTag: number) {
+  const fetcher = useCallback(
+    (signal: AbortSignal) => (targetId === null ? Promise.resolve(null) : endpoints.getChallengeReadiness(targetId, signal)),
+    [targetId],
+  )
+  return useApiQuery(`challenge-readiness:${targetId ?? 'none'}:${refreshTag}`, fetcher)
+}
+
+/** This judge's attempts (newest first). Re-fetched when `refreshTag` changes. */
+export function useChallengeSession(sessionId: string, refreshTag: number) {
+  const fetcher = useCallback((signal: AbortSignal) => endpoints.getChallengeSession(sessionId, signal), [sessionId])
+  return useApiQuery(`challenge-session:${sessionId}:${refreshTag}`, fetcher)
+}
+
 /** The guided Test → Fix → Protect progress; refreshes every 10 s. */
 export function useJourney() {
   return useApiQuery('journey', endpoints.getJourney, { intervalMs: 10_000 })

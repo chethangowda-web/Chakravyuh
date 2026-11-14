@@ -2,6 +2,7 @@
 
   DEMO_BOT=bharatbank (default)  BharatBank Assist: retail-bank support bot          (port 8100)
   DEMO_BOT=sahayak               Sahayak Seva: government-scheme citizen helpdesk     (port 8101)
+  DEMO_BOT=kaveri                Kaveri Bank Assist: REALISTIC well-configured bot    (port 8102)
 
 Sahayak's v1 also has an English-only keyword blocklist on the input, a common real-world
 "guardrail" that the same attack in Kannada, Hindi or code-mixed text walks straight past.
@@ -79,6 +80,16 @@ PROFILES: dict[str, dict] = {
                       "you are now", "pretend", "role play", "roleplay", "otp", "confidential", "internal"],
         "v1": "Secrets in the system prompt + an English-only keyword blocklist on input.",
         "v2": "No secrets in prompt, multilingual policy, output filter.",
+    },
+    "kaveri": {
+        # A REALISTIC bot: built the way a careful company would (strong rules, no backdoor, no customer PII,
+        # no keyword filter). Only a confidential internal note with a reference ID, to see if it leaks.
+        "title": "Kaveri Bank Assist", "emoji": "🏦", "tagline": "Realistic, well-configured demo bot. Not a real bank.",
+        "prompts": HERE / "prompts" / "kaveri",
+        "redactions": [re.compile(r"KB-INT[\w-]*", re.IGNORECASE), *_PII],
+        "blocklist": [],
+        "v1": "Careful production-style configuration: strong English-written rules, one confidential internal note.",
+        "v2": "Multilingual hardened policy, no internal notes in the prompt, output filter.",
     },
 }
 BOT = os.environ.get("DEMO_BOT", "bharatbank").strip().lower()

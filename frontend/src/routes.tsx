@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router'
 import { AppLayout } from './layouts/AppLayout'
 import { AttackStudioPage } from './pages/AttackStudioPage'
 import { CampaignDetailPage } from './pages/CampaignDetailPage'
+import { ChallengePage } from './pages/ChallengePage'
 import { CampaignsPage } from './pages/CampaignsPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { FindingDetailPage } from './pages/FindingDetailPage'
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'dashboard', element: <DashboardPage /> },
+      { path: 'challenge', element: <ChallengePage /> },
       { path: 'integrations', element: <IntegrationsPage /> },
       { path: 'targets', element: <TargetsPage /> },
       { path: 'targets/new', element: <TargetFormPage /> },

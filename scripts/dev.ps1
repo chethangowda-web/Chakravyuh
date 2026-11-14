@@ -2,6 +2,7 @@
 #   Backend      -> http://127.0.0.1:8010  (API docs at /docs)
 #   Demo target  -> http://127.0.0.1:8100  (BharatBank Assist, the app we attack)
 #   Demo target  -> http://127.0.0.1:8101  (Sahayak Seva, government-scheme helpdesk)
+#   Demo target  -> http://127.0.0.1:8102  (Kaveri Bank Assist, realistic well-configured bot)
 #   Frontend     -> http://localhost:5173
 # Usage (from repo root):  powershell -ExecutionPolicy Bypass -File scripts\dev.ps1
 # First-time setup: see README.md ("Setup").
@@ -19,9 +20,11 @@ if (-not (Test-Path (Join-Path $backend '.env'))) { Write-Warning "backend\.env 
 Start-Process powershell -WorkingDirectory $backend -ArgumentList '-NoExit', '-Command', "& '$python' -m uvicorn app.main:app --reload --port 8010"
 Start-Process powershell -WorkingDirectory $root -ArgumentList '-NoExit', '-Command', "& '$python' -m uvicorn app:app --app-dir demo_target --port 8100"
 Start-Process powershell -WorkingDirectory $root -ArgumentList '-NoExit', '-Command', "`$env:DEMO_BOT='sahayak'; & '$python' -m uvicorn app:app --app-dir demo_target --port 8101"
+Start-Process powershell -WorkingDirectory $root -ArgumentList '-NoExit', '-Command', "`$env:DEMO_BOT='kaveri'; & '$python' -m uvicorn app:app --app-dir demo_target --port 8102"
 Start-Process powershell -WorkingDirectory $frontend -ArgumentList '-NoExit', '-Command', 'npm run dev'
 
 Write-Host 'Backend     : http://127.0.0.1:8010/docs'
 Write-Host 'Demo target : http://127.0.0.1:8100  (BharatBank Assist)'
 Write-Host 'Demo target : http://127.0.0.1:8101  (Sahayak Seva)'
+Write-Host 'Demo target : http://127.0.0.1:8102  (Kaveri Bank Assist, realistic)'
 Write-Host 'Frontend    : http://localhost:5173'

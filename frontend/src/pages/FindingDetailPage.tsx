@@ -6,6 +6,7 @@ import { useResult } from '../api/hooks/queries'
 import { CategoryText, LangBadge, VariantBadge, VerdictText, VoiceBadge } from '../components/domain/Badges'
 import { DetectorList, HighlightedText } from '../components/domain/Evidence'
 import { SeverityBadge } from '../components/domain/SeverityBadge'
+import { StandardsTags } from '../components/domain/StandardsTags'
 import { Badge } from '../components/ui/Badge'
 import { Card } from '../components/ui/Card'
 import { ErrorNotice } from '../components/ui/ErrorNotice'
@@ -15,6 +16,7 @@ import { pct } from '../lib/format'
 import { LANGUAGES } from '../lib/languages'
 import { CATEGORY_LABELS, tacticLabel } from '../lib/labels'
 import { useIdParam } from '../lib/params'
+import { mayExposePersonalData } from '../lib/standards'
 import type { ResultDetail } from '../types/domain'
 
 export function FindingDetailPage() {
@@ -38,6 +40,7 @@ function FindingDetail({ resultId }: { resultId: number }) {
         <ArrowLeft className="size-4" aria-hidden /> Back to campaign
       </Link>
       <VerdictHero r={r} />
+      {r.verdict === 'vulnerable' && <StandardsTags category={r.category} personalData={mayExposePersonalData(r.detector_hits)} />}
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <SeverityBadge severity={r.severity} />
         <VerdictText verdict={r.verdict} confidence={r.confidence} />

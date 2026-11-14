@@ -723,6 +723,183 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/challenge/{target_id}/readiness": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Readiness
+         * @description Is the demo bot reachable, verified and in its intended vulnerable state?
+         */
+        get: operations["getChallengeReadiness"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/challenge/{target_id}/probe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Probe
+         * @description Send one KNOWN attack to the unprotected bot and report whether it really leaks right now.
+         */
+        post: operations["probeChallengeBot"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/challenge/{target_id}/reset-bot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reset Bot
+         * @description Put the demo bot back on v1 (an applied auto-fix leaves it on 'custom').
+         */
+        post: operations["resetChallengeBot"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/challenge/attack": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Attack
+         * @description Step 1: store the exact prompt and attack the UNPROTECTED bot.
+         */
+        post: operations["challengeAttack"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/challenge/attempts/{attempt_id}/shield": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate Shield
+         * @description Step 2: replay the stored prompt through the real Shield.
+         */
+        post: operations["challengeActivateShield"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/challenge/attempts/{attempt_id}/replay": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Replay
+         * @description Send the stored prompt to both modes again.
+         */
+        post: operations["challengeReplay"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/challenge/sessions/{session_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Session Attempts */
+        get: operations["getChallengeSession"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/challenge/recorded": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Recorded
+         * @description Fallback: a real earlier run that showed the full story, always labelled source='recorded'.
+         */
+        get: operations["getRecordedChallenge"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/challenge/transcribe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Transcribe
+         * @description Speech to text only; nothing is attacked until the judge reviews and sends the text.
+         */
+        post: operations["challengeTranscribe"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -773,6 +950,29 @@ export interface components {
             /** Warnings */
             warnings: string[];
         };
+        /** AttackRequest */
+        AttackRequest: {
+            /** Session Id */
+            session_id: string;
+            /** Target Id */
+            target_id: number;
+            /** Message */
+            message: string;
+            language: components["schemas"]["LanguageCode"];
+            /** @default native */
+            style: components["schemas"]["ScriptVariant"];
+            /**
+             * Input Method
+             * @default typed
+             * @enum {string}
+             */
+            input_method: "typed" | "voice";
+            category?: components["schemas"]["AttackCategory"] | null;
+            /** Template Id */
+            template_id?: string | null;
+            /** Marker Token */
+            marker_token?: string | null;
+        };
         /** AttackTemplateList */
         AttackTemplateList: {
             /** Items */
@@ -816,6 +1016,68 @@ export interface components {
          * @enum {string}
          */
         AttackWrapper: "script_switch" | "roleplay_wrap" | "translation_wrap";
+        /** AttemptOut */
+        AttemptOut: {
+            /** Id */
+            id: number;
+            /** Session Id */
+            session_id: string;
+            /** Target Id */
+            target_id: number;
+            /** Prompt */
+            prompt: string;
+            /** Prompt Sha256 */
+            prompt_sha256: string;
+            selected_language: components["schemas"]["LanguageCode"];
+            style: components["schemas"]["ScriptVariant"];
+            /**
+             * Input Method
+             * @enum {string}
+             */
+            input_method: "typed" | "voice";
+            /** @description Library attack type, null for the judge's own words */
+            category: components["schemas"]["AttackCategory"] | null;
+            /** Template Id */
+            template_id: string | null;
+            /**
+             * Marker Token
+             * @description Injected code that proves the bot obeyed, if the attack carries one
+             */
+            marker_token: string | null;
+            /** Detected Language */
+            detected_language: string | null;
+            /** Detected Script */
+            detected_script: string | null;
+            /** English */
+            english: string | null;
+            /**
+             * Language Matches
+             * @description Whether Sarvam's detected language equals the selected one
+             */
+            language_matches: boolean | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            unprotected: components["schemas"]["RunOut"] | null;
+            shield: components["schemas"]["RunOut"] | null;
+            /**
+             * Identical Prompt
+             * @description Both runs received exactly the same text; null until both ran
+             */
+            identical_prompt: boolean | null;
+            /**
+             * Outcome
+             * @enum {string}
+             */
+            outcome: "shield_stopped_breach" | "shield_missed" | "both_held" | "shield_blocked_without_breach" | "unprotected_only" | "incomplete";
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "live" | "recorded";
+        };
         /** AudioAssetOut */
         AudioAssetOut: {
             /** Id */
@@ -839,6 +1101,15 @@ export interface components {
          * @enum {string}
          */
         AudioSource: "tts" | "upload";
+        /** Body_challengeTranscribe */
+        Body_challengeTranscribe: {
+            /**
+             * File
+             * @description WAV/WebM/OGG/MP3/M4A, at most 2 MB
+             */
+            file: string;
+            language?: components["schemas"]["LanguageCode"] | null;
+        };
         /** Body_uploadVoice */
         Body_uploadVoice: {
             /**
@@ -1084,6 +1355,20 @@ export interface components {
             /** Vulnerability Rate */
             vulnerability_rate: number;
         };
+        /** CheckOut */
+        CheckOut: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /**
+             * Ok
+             * @description true = good, false = needs attention, null = could not be determined
+             */
+            ok: boolean | null;
+            /** Detail */
+            detail: string;
+        };
         /**
          * Confidence
          * @enum {string}
@@ -1131,6 +1416,26 @@ export interface components {
         /** ErrorResponse */
         ErrorResponse: {
             error: components["schemas"]["ErrorBody"];
+        };
+        /** EvidenceItem */
+        EvidenceItem: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "planted_secret" | "planted_personal_data" | "prompt_leak" | "injected_instruction" | "possible_pii_pattern";
+            /**
+             * Confirmed
+             * @description false = only a PII-looking pattern with no link to planted data
+             */
+            confirmed: boolean;
+            /** Label */
+            label: string;
+            /**
+             * Value
+             * @description The matched text (synthetic demo data), when it is safe to show
+             */
+            value: string | null;
         };
         /** FalseBlockItem */
         FalseBlockItem: {
@@ -1658,6 +1963,49 @@ export interface components {
          * @enum {string}
          */
         Mutation: "adaptive" | "translate" | "code_mix" | "romanize" | "script_switch" | "roleplay_wrap" | "translation_wrap" | "tts";
+        /**
+         * ProbeOut
+         * @description Result of sending one KNOWN attack to the unprotected bot to confirm it is in the vulnerable state.
+         */
+        ProbeOut: {
+            /** Leaked */
+            leaked: boolean;
+            language: components["schemas"]["LanguageCode"];
+            /** Prompt */
+            prompt: string;
+            /**
+             * Attack Label
+             * @description Which known attack was sent last, e.g. 'auditor asks for personal data'
+             */
+            attack_label: string;
+            /** Latency Ms */
+            latency_ms: number;
+            /** Evidence */
+            evidence: string[];
+            /** Error */
+            error: string | null;
+        };
+        /** ReadinessOut */
+        ReadinessOut: {
+            /** Target Id */
+            target_id: number;
+            /** Target Name */
+            target_name: string;
+            /** Shield Target Id */
+            shield_target_id: number | null;
+            /**
+             * Bot Version
+             * @description v1 = the intended vulnerable state; null = unknown
+             */
+            bot_version: string | null;
+            /**
+             * Ready
+             * @description Everything the live demonstration needs is in place
+             */
+            ready: boolean;
+            /** Checks */
+            checks: components["schemas"]["CheckOut"][];
+        };
         /** RegressionCaseOut */
         RegressionCaseOut: {
             /** Base Test Case Id */
@@ -1750,6 +2098,11 @@ export interface components {
              * @default 0
              */
             new_vulnerability: number;
+        };
+        /** ResetOut */
+        ResetOut: {
+            /** Bot Version */
+            bot_version: string | null;
         };
         /** ResultDetail */
         ResultDetail: {
@@ -1860,6 +2213,67 @@ export interface components {
              */
             created_at: string;
         };
+        /** RunOut */
+        RunOut: {
+            /** Id */
+            id: number;
+            /** Attempt Id */
+            attempt_id: number;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "unprotected" | "shield";
+            /**
+             * Source
+             * @description 'live' only for a run that just executed; 'recorded' for a stored one
+             * @enum {string}
+             */
+            source: "live" | "recorded";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ok" | "error" | "timeout";
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "breached" | "possible" | "held" | "blocked" | "redacted" | "allowed" | "error";
+            /** Reply */
+            reply: string | null;
+            /** Shield Action */
+            shield_action: ("allowed" | "blocked_input" | "redacted_output" | "blocked_output") | null;
+            /** Shield Reason */
+            shield_reason: string | null;
+            /** Shield Rule */
+            shield_rule: string | null;
+            /** Shield Category */
+            shield_category: string | null;
+            /** Evidence */
+            evidence: components["schemas"]["EvidenceItem"][];
+            /** Spans */
+            spans: components["schemas"]["SpanOut"][];
+            /** Latency Ms */
+            latency_ms: number;
+            /**
+             * Prompt Sha256
+             * @description Hash of the exact text this run received
+             */
+            prompt_sha256: string;
+            /** Error */
+            error: string | null;
+            /**
+             * Finding Id
+             * @description Open /findings/{id} for the full stored evidence
+             */
+            finding_id: number | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
         /**
          * ScriptVariant
          * @enum {string}
@@ -1900,6 +2314,13 @@ export interface components {
             by_category: components["schemas"]["CategoryStat"][];
             /** Heatmap */
             heatmap: components["schemas"]["HeatmapCell"][];
+        };
+        /** SessionOut */
+        SessionOut: {
+            /** Session Id */
+            session_id: string;
+            /** Attempts */
+            attempts: components["schemas"]["AttemptOut"][];
         };
         /**
          * Severity
@@ -2076,6 +2497,15 @@ export interface components {
             blocked_output: number;
             /** By Language */
             by_language: components["schemas"]["ShieldLanguageStat"][];
+        };
+        /** SpanOut */
+        SpanOut: {
+            /** Start */
+            start: number;
+            /** End */
+            end: number;
+            /** Confirmed */
+            confirmed: boolean;
         };
         /** SynthesizeRequest */
         SynthesizeRequest: {
@@ -2261,6 +2691,13 @@ export interface components {
             start: number;
             /** End */
             end: number;
+        };
+        /** TranscribeOut */
+        TranscribeOut: {
+            /** Transcript */
+            transcript: string;
+            /** Detected Language */
+            detected_language: string | null;
         };
         /** VariantStat */
         VariantStat: {
@@ -4240,6 +4677,370 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ManualCheckOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    getChallengeReadiness: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReadinessOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    probeChallengeBot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProbeOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    resetChallengeBot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResetOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    challengeAttack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttackRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttemptOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    challengeActivateShield: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attempt_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttemptOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    challengeReplay: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attempt_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttemptOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    getChallengeSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    getRecordedChallenge: {
+        parameters: {
+            query?: {
+                language?: components["schemas"]["LanguageCode"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttemptOut"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    challengeTranscribe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_challengeTranscribe"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TranscribeOut"];
                 };
             };
             /** @description Client error */

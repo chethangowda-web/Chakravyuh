@@ -5,6 +5,7 @@ from fastapi import APIRouter
 from app.api.v1 import (
     attacks,
     campaigns,
+    challenge,
     dashboard,
     fixes,
     health,
@@ -24,5 +25,5 @@ ERROR_RESPONSES: dict[int | str, dict[str, object]] = {
 }
 
 api_router = APIRouter(prefix="/api/v1", responses=ERROR_RESPONSES)
-for module in (health, meta, targets, attacks, campaigns, fixes, results, voice, regression, dashboard, shield, manual):
+for module in (health, meta, targets, attacks, campaigns, fixes, results, voice, regression, dashboard, shield, manual, challenge):
     api_router.include_router(module.router)

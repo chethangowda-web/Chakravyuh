@@ -1,0 +1,82 @@
+# Render Blueprint: API + web + three demo bots, all on the free plan.
+# Render asks for SARVAM_API_KEY once per service (sync: false); it is never stored in this repo.
+# Service names set the public URLs (https://<name>.onrender.com); if a name is taken, change it
+# here AND in the URLs below.
+services:
+  - type: web
+    name: chakravyuh-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: SARVAM_API_KEY
+        sync: false
+      - key: SEED_DEMO_DATA
+        value: "true"
+      - key: CORS_ORIGINS
+        value: https://chakravyuh-web.onrender.com
+      - key: PUBLIC_API_BASE_URL
+        value: https://chakravyuh-api.onrender.com
+      - key: DEMO_BHARATBANK_URL
+        value: https://chakravyuh-bharatbank.onrender.com
+      - key: DEMO_SAHAYAK_URL
+        value: https://chakravyuh-sahayak.onrender.com
+      - key: DEMO_KAVERI_URL
+        value: https://chakravyuh-kaveri.onrender.com
+
+  - type: web
+    name: chakravyuh-bharatbank
+    runtime: docker
+    plan: free
+    dockerfilePath: ./demo_target/Dockerfile
+    dockerContext: ./demo_target
+    envVars:
+      - key: SARVAM_API_KEY
+        sync: false
+      - key: DEMO_BOT
+        value: bharatbank
+      - key: CHAKRAVYUH_VERIFY_TOKEN
+        value: chakravyuh-verify-v0xN7tLskrRl-qyj5FLSNNBz
+
+  - type: web
+    name: chakravyuh-sahayak
+    runtime: docker
+    plan: free
+    dockerfilePath: ./demo_target/Dockerfile
+    dockerContext: ./demo_target
+    envVars:
+      - key: SARVAM_API_KEY
+        sync: false
+      - key: DEMO_BOT
+        value: sahayak
+      - key: CHAKRAVYUH_VERIFY_TOKEN
+        value: chakravyuh-verify-n0By9LoooIFh0iM0tgvmniaD
+
+  - type: web
+    name: chakravyuh-kaveri
+    runtime: docker
+    plan: free
+    dockerfilePath: ./demo_target/Dockerfile
+    dockerContext: ./demo_target
+    envVars:
+      - key: SARVAM_API_KEY
+        sync: false
+      - key: DEMO_BOT
+        value: kaveri
+      - key: CHAKRAVYUH_VERIFY_TOKEN
+        value: chakravyuh-verify-LPPfONHs7-n6xO8iAGO0Y0iU
+
+  - type: web
+    name: chakravyuh-web
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://chakravyuh-api.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

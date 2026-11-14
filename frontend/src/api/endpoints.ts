@@ -48,6 +48,35 @@ export const endpoints = {
         signal,
       }),
     ),
+  getChallengeReadiness: (targetId: number, signal: AbortSignal) =>
+    unwrap(api.GET('/api/v1/challenge/{target_id}/readiness', { params: { path: { target_id: targetId } }, signal })),
+  probeChallengeBot: (targetId: number) =>
+    unwrap(api.POST('/api/v1/challenge/{target_id}/probe', { params: { path: { target_id: targetId } } })),
+  resetChallengeBot: (targetId: number) =>
+    unwrap(api.POST('/api/v1/challenge/{target_id}/reset-bot', { params: { path: { target_id: targetId } } })),
+  challengeAttack: (body: S['AttackRequest']) => unwrap(api.POST('/api/v1/challenge/attack', { body })),
+  challengeActivateShield: (attemptId: number) =>
+    unwrap(api.POST('/api/v1/challenge/attempts/{attempt_id}/shield', { params: { path: { attempt_id: attemptId } } })),
+  challengeReplay: (attemptId: number) =>
+    unwrap(api.POST('/api/v1/challenge/attempts/{attempt_id}/replay', { params: { path: { attempt_id: attemptId } } })),
+  getChallengeSession: (sessionId: string, signal: AbortSignal) =>
+    unwrap(api.GET('/api/v1/challenge/sessions/{session_id}', { params: { path: { session_id: sessionId } }, signal })),
+  getRecordedChallenge: (language: S['LanguageCode'] | null) =>
+    unwrap(api.GET('/api/v1/challenge/recorded', { params: { query: language === null ? {} : { language } } })),
+  /** Speech to text only. Nothing is attacked until the judge reviews and sends the text. */
+  challengeTranscribe: async (file: Blob, filename: string, language: S['LanguageCode'] | null): Promise<S['TranscribeOut']> => {
+    const form = new FormData()
+    form.append('file', file, filename)
+    if (language !== null) form.append('language', language)
+    let response: Response
+    try {
+      response = await fetch(`${baseUrl}/api/v1/challenge/transcribe`, { method: 'POST', body: form })
+    } catch {
+      throw new ApiError(0, 'network_error', 'Cannot reach the Chakravyuh API. Is the backend running?')
+    }
+    if (!response.ok) throw await errorFromResponse(response)
+    return (await response.json()) as S['TranscribeOut']
+  },
   getJourney: (signal: AbortSignal) => unwrap(api.GET('/api/v1/dashboard/journey', { signal })),
   getShieldOverview: (targetId: number, signal: AbortSignal) =>
     unwrap(api.GET('/api/v1/shield/{target_id}', { params: { path: { target_id: targetId } }, signal })),

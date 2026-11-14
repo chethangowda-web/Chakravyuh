@@ -3,6 +3,7 @@
 from app.models.audio import AudioAsset
 from app.models.cache import SarvamCache
 from app.models.campaign import Campaign
+from app.models.challenge import ChallengeAttempt, ChallengeRun
 from app.models.fix import FixProposal
 from app.models.helpfulness import HelpfulnessRun
 from app.models.regression import RegressionRun
@@ -14,6 +15,8 @@ from app.models.test_case import TestCase
 __all__ = [
     "AudioAsset",
     "Campaign",
+    "ChallengeAttempt",
+    "ChallengeRun",
     "FixProposal",
     "HelpfulnessRun",
     "RegressionRun",

@@ -42,6 +42,7 @@ from app.schemas.shield import (
     ShieldStats,
 )
 from app.services import analytics, helpfulness, mappers, target_adapter
+from app.services.campaign_kinds import not_interactive
 from app.services.campaigns import require_verified
 from app.services.detectors.base import DetectionInput
 from app.services.detectors.deterministic import detect_canary, detect_pii, detect_prompt_leak
@@ -340,7 +341,8 @@ def _config_key(config: dict[str, Any]) -> tuple[object, ...]:
 def _latest_completed(session: Session, target_id: int) -> list[Campaign]:
     return list(session.exec(
         select(Campaign).where(col(Campaign.target_id) == target_id, col(Campaign.parent_campaign_id).is_(None),
-                               col(Campaign.status) == CampaignStatus.COMPLETED)
+                               col(Campaign.status) == CampaignStatus.COMPLETED,
+                               *not_interactive())
         .order_by(col(Campaign.id).desc())
     ).all())
 

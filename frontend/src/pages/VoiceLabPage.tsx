@@ -1,5 +1,5 @@
-import { AudioLines, Mic, Square, Upload, Volume2, Wand2 } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { AudioLines, Volume2, Wand2 } from 'lucide-react'
+import { useState } from 'react'
 import { Link } from 'react-router'
 
 import { endpoints } from '../api/endpoints'
@@ -7,6 +7,8 @@ import { useAttackTemplates, useTargets } from '../api/hooks/queries'
 import { useAction } from '../api/hooks/useAction'
 import { CategoryText, LangBadge, VerdictText } from '../components/domain/Badges'
 import { DetectorList, EvidenceBlock, HighlightedText } from '../components/domain/Evidence'
+import { AudioFilePicker } from '../components/domain/AudioFilePicker'
+import { Recorder } from '../components/domain/Recorder'
 import { SeverityBadge } from '../components/domain/SeverityBadge'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
@@ -22,7 +24,6 @@ import { pick } from '../lib/params'
 import type { AttackCategory, LanguageCode } from '../types/domain'
 
 const LANGS = Object.keys(LANGUAGES) as LanguageCode[]
-const MAX_RECORD_SECONDS = 20
 
 export function VoiceLabPage() {
   const targets = useTargets()
@@ -163,7 +164,7 @@ export function VoiceLabPage() {
                   Speak it (Sarvam TTS)
                 </Button>
                 <Recorder onRecorded={(blob) => void onFile(blob, 'recording.webm')} busy={upload.pending} />
-                <FilePicker onPick={(file) => void onFile(file, file.name)} busy={upload.pending} />
+                <AudioFilePicker onPick={(file) => void onFile(file, file.name)} busy={upload.pending} />
               </div>
             </div>
           </Card>
@@ -233,91 +234,5 @@ export function VoiceLabPage() {
         </div>
       </div>
     </>
-  )
-}
-
-function FilePicker({ onPick, busy }: { onPick: (file: File) => void; busy: boolean }) {
-  const inputRef = useRef<HTMLInputElement>(null)
-  return (
-    <>
-      <input
-        ref={inputRef}
-        type="file"
-        accept="audio/*"
-        className="hidden"
-        onChange={(e) => {
-          const file = e.target.files?.[0]
-          if (file) onPick(file)
-          e.target.value = ''
-        }}
-      />
-      <Button icon={<Upload className="size-4" aria-hidden />} loading={busy} onClick={() => inputRef.current?.click()}>
-        Upload audio
-      </Button>
-    </>
-  )
-}
-
-function Recorder({ onRecorded, busy }: { onRecorded: (blob: Blob) => void; busy: boolean }) {
-  const [recording, setRecording] = useState(false)
-  const [seconds, setSeconds] = useState(0)
-  const [problem, setProblem] = useState<string | null>(null)
-  const recorderRef = useRef<MediaRecorder | null>(null)
-  const timerRef = useRef<number | null>(null)
-
-  useEffect(
-    () => () => {
-      if (timerRef.current !== null) window.clearInterval(timerRef.current)
-      recorderRef.current?.stream.getTracks().forEach((t) => t.stop())
-    },
-    [],
-  )
-
-  const stop = () => {
-    if (timerRef.current !== null) window.clearInterval(timerRef.current)
-    timerRef.current = null
-    recorderRef.current?.stop()
-    setRecording(false)
-  }
-
-  const start = async () => {
-    setProblem(null)
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const chunks: Blob[] = []
-      const recorder = new MediaRecorder(stream)
-      recorder.ondataavailable = (e) => chunks.push(e.data)
-      recorder.onstop = () => {
-        stream.getTracks().forEach((t) => t.stop())
-        onRecorded(new Blob(chunks, { type: 'audio/webm' }))
-      }
-      recorderRef.current = recorder
-      recorder.start()
-      setSeconds(0)
-      setRecording(true)
-      timerRef.current = window.setInterval(() => {
-        setSeconds((s) => {
-          if (s + 1 >= MAX_RECORD_SECONDS) stop()
-          return s + 1
-        })
-      }, 1000)
-    } catch {
-      setProblem('Microphone unavailable or permission denied.')
-    }
-  }
-
-  return (
-    <div className="flex items-center gap-2">
-      {recording ? (
-        <Button variant="danger" icon={<Square className="size-4" aria-hidden />} onClick={stop}>
-          Stop · {seconds}s
-        </Button>
-      ) : (
-        <Button icon={<Mic className="size-4" aria-hidden />} loading={busy} onClick={() => void start()}>
-          Record
-        </Button>
-      )}
-      {problem !== null && <span className="text-xs text-red-300">{problem}</span>}
-    </div>
   )
 }

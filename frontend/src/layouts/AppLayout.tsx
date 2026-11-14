@@ -1,4 +1,4 @@
-import { Crosshair, FlaskConical, House, LayoutDashboard, Mic, Plug, Plus, Radar, ShieldCheck } from 'lucide-react'
+import { Crosshair, FlaskConical, House, LayoutDashboard, Mic, Plug, Plus, Radar, ShieldCheck, Swords } from 'lucide-react'
 import type { ComponentType, SVGProps } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router'
 
@@ -19,6 +19,7 @@ const NAV_SECTIONS: ReadonlyArray<{ title: string; items: readonly NavItem[] }> 
     items: [
       { to: '/', label: 'Home', icon: House, end: true },
       { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { to: '/challenge', label: 'Break the Chakravyuh', icon: Swords },
     ],
   },
   {
