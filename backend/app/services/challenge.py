@@ -499,13 +499,36 @@ def _admin_url(target: Target, path: str) -> str:
     return f"{parts.scheme}://{parts.netloc.decode()}{path}"
 
 
+WAKE_STATUSES = {502, 503, 504}  # what a sleeping free-tier host (e.g. Render) answers while it boots
+
+
+async def _bot_request(method: str, target: Target, path: str, *, json: dict | None = None,
+                       budget_s: float = 50.0) -> httpx.Response:
+    """Call one of the demo bot's admin endpoints, waiting for a cold start: a sleeping host answers 502/503/504 or
+    times out for ~15-20 s, so retry until it is awake or the budget runs out. The last error is raised/returned."""
+    url = _admin_url(target, path)
+    await net_guard.check_url(url)
+    deadline = time.perf_counter() + budget_s
+    last_exc: httpx.HTTPError | None = None
+    while True:
+        remaining = deadline - time.perf_counter()
+        try:
+            async with httpx.AsyncClient(timeout=max(3.0, min(20.0, remaining)), follow_redirects=False) as client:
+                response = await client.request(method, url, json=json, headers=dict(target.headers))
+            if response.status_code not in WAKE_STATUSES or time.perf_counter() >= deadline:
+                return response
+            last_exc = None
+        except httpx.HTTPError as exc:
+            last_exc = exc
+            if time.perf_counter() >= deadline:
+                raise
+        await asyncio.sleep(2.0)
+
+
 async def _admin_get(target: Target, path: str) -> dict | None:
     """GET one of the demo bot's own admin endpoints. None when it can't be read (not a demo bot, or down)."""
-    url = _admin_url(target, path)
     try:
-        await net_guard.check_url(url)
-        async with httpx.AsyncClient(timeout=5, follow_redirects=False) as client:
-            response = await client.get(url, headers=dict(target.headers))
+        response = await _bot_request("GET", target, path, budget_s=40.0)
         return response.json() if response.status_code == 200 else None
     except (AppError, httpx.HTTPError, ValueError):
         return None
@@ -590,15 +613,12 @@ async def reset_bot(session: Session, target_id: int) -> ResetOut:
     """Put a demo bot back on v1 (its own admin endpoint on the SAME verified origin, SSRF-guarded), and re-sync
     Chakravyuh's stored copy of its prompt, which an applied auto-fix overwrites."""
     target = _original_target(session, target_id)
-    url = _admin_url(target, "/admin/version")
-    await net_guard.check_url(url)
     try:
-        async with httpx.AsyncClient(timeout=10, follow_redirects=False) as client:
-            response = await client.post(url, json={"version": "v1"}, headers=dict(target.headers))
+        response = await _bot_request("POST", target, "/admin/version", json={"version": "v1"}, budget_s=60.0)
     except httpx.HTTPError as exc:
         raise AppError(502, "bot_unreachable", f"Could not reach the bot to reset it: {exc}") from exc
     if response.status_code >= 300:
-        raise AppError(502, "reset_failed", f"The bot refused the reset (HTTP {response.status_code}).")
+        raise AppError(502, "reset_failed", f"The bot refused the reset (HTTP {response.status_code}). If it is a free-tier host it may still be waking up: wait a few seconds and click Reset again.")
     prompt = await _live_prompt(target)
     if prompt and (target.system_prompt_hint or "").strip() != prompt.strip():
         target.system_prompt_hint = prompt

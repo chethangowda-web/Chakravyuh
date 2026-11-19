@@ -322,7 +322,7 @@ def test_readiness_detects_a_stale_stored_prompt_and_reset_resyncs_it(h: Harness
         async def __aenter__(self) -> "FakeClient":
             return self
         async def __aexit__(self, *a: object) -> None: ...
-        async def post(self, url: str, json: dict, headers: dict) -> FakeResponse:
+        async def request(self, method: str, url: str, json: dict | None = None, headers: dict | None = None) -> FakeResponse:
             posted.append(url)
             return FakeResponse()
 
@@ -390,3 +390,33 @@ def test_probe_falls_back_to_prompt_extraction_when_there_is_no_planted_personal
         h.reply_for = Harness.default_reply  # the auditor attack leaks again
         p2 = c.post(f"/api/v1/challenge/{make_target()}/probe").json()  # this bot has planted personal data: tried first
         assert p2["leaked"] is True and p2["attack_label"] == "an auditor asks for personal data"
+
+
+def test_bot_request_waits_out_a_cold_start(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A sleeping free-tier host answers 502 for a while; the reset must retry instead of failing on the first 502."""
+    calls: list[int] = []
+
+    class Resp:
+        def __init__(self, code: int) -> None:
+            self.status_code = code
+
+    class WakingClient:
+        def __init__(self, *a: object, **k: object) -> None: ...
+        async def __aenter__(self) -> "WakingClient":
+            return self
+        async def __aexit__(self, *a: object) -> None: ...
+        async def request(self, method: str, url: str, json: dict | None = None, headers: dict | None = None) -> Resp:
+            calls.append(1)
+            return Resp(502 if len(calls) < 3 else 200)
+
+    async def allowed(url: str) -> None: ...
+    async def no_sleep(_s: float) -> None: ...
+
+    monkeypatch.setattr(challenge.httpx, "AsyncClient", WakingClient)
+    monkeypatch.setattr(challenge.net_guard, "check_url", allowed)
+    monkeypatch.setattr(challenge.asyncio, "sleep", no_sleep)
+    import asyncio as _a
+    from app.models import Target
+    t = Target(name="x", base_url="https://bot.example/chat", headers=[])
+    resp = _a.run(challenge._bot_request("POST", t, "/admin/version", json={"version": "v1"}, budget_s=30))
+    assert resp.status_code == 200 and len(calls) == 3
