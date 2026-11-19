@@ -60,14 +60,18 @@ def formation(session: Session, scope: Scope, campaign_id: int | None = None) ->
 
     # An evenly spaced sample across ALL results in scope (not just the latest few), so the replay's mix of
     # leaks and blocks matches the rings instead of whatever the last run happened to be.
+    ids = list(session.exec(
+        select(Result.id).where(col(Result.campaign_id).in_(campaign_ids),
+                                col(Result.verdict).in_([Verdict.VULNERABLE, Verdict.SAFE])).order_by(col(Result.id))
+    ).all()) if campaign_ids else []
+    if len(ids) > _REPLAY:
+        step = len(ids) / _REPLAY
+        ids = [ids[int(i * step)] for i in range(_REPLAY)]
+    # full rows (evidence, detector hits) only for the few attacks the replay shows
     rows = list(session.exec(
         select(Result, TestCase).join(TestCase, col(TestCase.id) == col(Result.test_case_id))
-        .where(col(Result.campaign_id).in_(campaign_ids), col(Result.verdict).in_([Verdict.VULNERABLE, Verdict.SAFE]))
-        .order_by(col(Result.id))
-    ).all()) if campaign_ids else []
-    if len(rows) > _REPLAY:
-        step = len(rows) / _REPLAY
-        rows = [rows[int(i * step)] for i in range(_REPLAY)]
+        .where(col(Result.id).in_(ids)).order_by(col(Result.id))
+    ).all()) if ids else []
     attacks: list[FormationAttack] = []
     for r, tc in rows:
         assert r.id is not None

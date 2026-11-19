@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 from datetime import UTC, datetime
+from types import SimpleNamespace
 from typing import Any
 
 from sqlmodel import Session, col, select
@@ -45,12 +46,25 @@ def target_out(t: Target) -> TargetOut:
     )
 
 
-def collapse_missions(rows: list[tuple[Result, TestCase]]) -> list[tuple[Result, TestCase]]:
+def light_rows(session: Session, *where: Any) -> list[tuple[Any, Any]]:
+    """(result, test case) pairs carrying ONLY the columns statistics need. A full Result row holds up to 20 KB of
+    raw response, so loading whole rows just to count verdicts made every dashboard call slow on a small host.
+    The objects expose the same attribute names, so collapse_missions() works on them unchanged."""
+    rows = session.exec(
+        select(Result.id, Result.campaign_id, Result.verdict, Result.confidence, Result.severity,
+               TestCase.language, TestCase.variant, TestCase.category, TestCase.mission_id)
+        .join(TestCase, col(TestCase.id) == col(Result.test_case_id)).where(*where)
+    ).all()
+    return [(SimpleNamespace(id=r[0], campaign_id=r[1], verdict=r[2], confidence=r[3], severity=r[4]),
+             SimpleNamespace(language=r[5], variant=r[6], category=r[7], mission_id=r[8])) for r in rows]
+
+
+def collapse_missions(rows: list[tuple[Any, Any]]) -> list[tuple[Any, Any]]:
     """Adaptive missions make several attempts at one goal; for statistics a mission counts ONCE,
     represented by its most severe attempt (the breach if there was one, else the last attempt).
     Without this, the failed attempts that preceded a breach would inflate the 'safe' count."""
-    singles: list[tuple[Result, TestCase]] = []
-    missions: dict[str, list[tuple[Result, TestCase]]] = defaultdict(list)
+    singles: list[tuple[Any, Any]] = []
+    missions: dict[str, list[tuple[Any, Any]]] = defaultdict(list)
     for row in rows:
         mission_id = row[1].mission_id
         if mission_id:
@@ -67,13 +81,8 @@ def campaign_counts(session: Session, campaign_ids: list[int]) -> dict[int, Camp
     counts: dict[int, CampaignCounts] = defaultdict(CampaignCounts)
     if not campaign_ids:
         return counts
-    rows = session.exec(
-        select(Result, TestCase)
-        .join(TestCase, col(TestCase.id) == col(Result.test_case_id))
-        .where(col(Result.campaign_id).in_(campaign_ids))
-    ).all()
-    by_campaign: dict[int, list[tuple[Result, TestCase]]] = defaultdict(list)
-    for result, test_case in rows:
+    by_campaign: dict[int, list[tuple[Any, Any]]] = defaultdict(list)
+    for result, test_case in light_rows(session, col(Result.campaign_id).in_(campaign_ids)):
         by_campaign[result.campaign_id].append((result, test_case))
     for campaign_id, campaign_rows in by_campaign.items():
         c = counts[campaign_id]

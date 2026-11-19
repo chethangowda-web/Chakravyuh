@@ -27,12 +27,7 @@ def _rate(vulnerable: int, total: int) -> float:
 
 
 def breakdown(session: Session, campaign_ids: list[int]) -> SecurityBreakdown:
-    rows: list[tuple[Result, TestCase]] = []
-    if campaign_ids:
-        rows = list(session.exec(
-            select(Result, TestCase).join(TestCase, col(TestCase.id) == col(Result.test_case_id))
-            .where(col(Result.campaign_id).in_(campaign_ids))
-        ).all())
+    rows = mappers.light_rows(session, col(Result.campaign_id).in_(campaign_ids)) if campaign_ids else []
     valid = [(r, tc) for r, tc in mappers.collapse_missions(rows) if r.verdict is not Verdict.ERROR]
 
     severity = SeverityCounts()
